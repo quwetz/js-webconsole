@@ -1,0 +1,23 @@
+body {
+	font-family: courier;
+	background-color: black;
+	font-size: 16px;
+	color: lime;
+}
+
+#console {
+	padding: 10px;
+	margin: 10px
+}
+
+input[type=text] {
+	font-family: courier;
+	font-size: 16px;
+	background-color: black;
+	color: lime;
+	width: 90%;
+	border: none;
+}
+input[type=text]:focus {
+  outline: none;
+}
