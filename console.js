@@ -1,11 +1,12 @@
 'use strict';
 
-export {log, setBackgroundColor, setForegroundColor, setTargetElement, runApp, closeApp};
+export {log, setBackgroundColor, setForegroundColor, setTargetElement, runApp, closeApp, showCommandPrompt, hideCommandPrompt};
 
 import * as cmd from './commands.js';
 
 var targetElement;
 var logContainer;
+var commandPromptLabel;
 var commandPrompt;
 
 var logHistory = [];
@@ -20,9 +21,14 @@ function setTargetElement(target){
 		target.innerHTML = '';
 	}
 	targetElement = target;
-	targetElement.innerHTML += '<div id="consoleLog"></div>><input id="commandline" type="text" name="command_line" autofocus>';
-	commandPrompt = document.getElementById('commandline');
-	logContainer = document.getElementById('consoleLog');
+	
+	logContainer = targetElement.appendChild(document.createElement('div'));
+	commandPromptLabel = targetElement.appendChild(document.createElement('span'));
+	commandPromptLabel.innerText = '>';
+	commandPrompt = targetElement.appendChild(document.createElement('input'));
+	commandPrompt.type = 'text';
+	commandPrompt.focus();
+	
 }
 
 function keyPressed(){
@@ -84,15 +90,11 @@ function run(commandString){
 function parseCommand(commandString){
 	var parts = commandString.split(' ');
 	var command = parts.shift();
-	try{
+	if(Object.keys(cmd.commands).includes(command)){
 		cmd.commands[command].execute(parts);
-	} catch ({name, message}) {
-		if(name === 'TypeError'){
-			log('Unknown command: ' + command);
-			return;
-		}
-		console.error(message);
-	}
+	} else {
+		log('Unknown command: ' + command);
+	}			
 }
 
 function setBackgroundColor(params) {
@@ -139,10 +141,10 @@ function log(msg){
 	console.log(msg);
 }
 
-function runApp(app){
+function runApp(startApp, params){
 	if(activeApp == undefined){
-		activeApp = app;
-		activeApp.start(logContainer, commandPrompt, closeApp);
+		logContainer.innerHTML = ''; // TODO: hide the log and pass a new element for rendering the game 
+		activeApp = startApp(logContainer.appendChild(document.createElement('div')), commandPrompt, closeApp, params);
 		return;
 	}
 	throw new Error('There is already an App running');
@@ -151,7 +153,19 @@ function runApp(app){
 function closeApp(){
 	console.log('closeApp called');
 	activeApp = undefined;
+	showCommandPrompt();
+	logContainer.innerHTML = '';
 	for(let line of commandHistory){
 		logContainer.innerHTML += line + '<br>';
 	}
+}
+
+function showCommandPrompt(){
+	commandPromptLabel.style.visibility = 'visible';
+	commandPrompt.style.visibility = 'visible';
+}
+
+function hideCommandPrompt(){
+	commandPromptLabel.style.visibility = 'hidden';
+	commandPrompt.style.visibility = 'hidden';
 }

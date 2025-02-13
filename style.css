@@ -6,8 +6,21 @@ body {
 }
 
 #console {
-	padding: 10px;
-	margin: 10px
+	width: 99%;
+	margin: auto;
+}
+
+.posAbsolute {
+	position: relative;
+}
+
+.floatingBanner {
+	margin: auto;
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
 }
 
 input[type=text] {

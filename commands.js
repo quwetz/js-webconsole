@@ -31,6 +31,11 @@ var commands = {
 		description: 'Runs a game in the console',
 		info: 'Usage: <i>startgame (game_name) [parameters]...</i><br>Examples: <i>startgame minesweeper</i>, <i>startgame snake 128 64</i><br>Use <i>games</i> to list available games',
 	},
+	games: {
+		execute: listGames,
+		description: 'Lists all available games',
+		info: 'Usage: <i>listGames</i>',
+	},
 };
 
 var games = {
@@ -47,27 +52,36 @@ function echo(params){
 function help(params){
 	if (params[0] == undefined){
 		log('Available Commands:');
-		for(let cmd of Object.keys(commands)){
-			log(`&emsp; ${ cmd} - ${ commands[cmd].description}`);
-		}
+		Object.keys(commands).forEach((e) => log(` ‣ ${ e} - ${ commands[e].description}`));
+		log('');
 		log('For detailed Information use <i>help [command]</i>');
 		return;
 	}
-	try{
+	if(Object.keys(commands).includes(params[0])){
 		log(`Description: ${ commands[params[0]].description}`);
 		log(commands[params[0]].info);
-	} catch ({name, message}) {
-		if(name === 'TypeError'){
-			log('Unknown command: ' + params[0]);
-			return;
-		}
-		console.error(message);
-	}	
+		return;
+	}
+	log('Unknown command: ' + params[0]);
 }
 
 function startGame(params){
-	var game = params.shift();
-	runApp(games[game].newGame(params));
+	if(params[0] == undefined){
+		log('Missing parameter. Which game should be run?')
+		listGames();
+		return;
+	}
+	if(Object.keys(games).includes(params[0])){
+		var game = params.shift();
+		runApp(games[game].newGame, params);
+		return;
+	}
+	log('Unknown game: ' + params[0]);
+}
+
+function listGames(){
+	log('Available Games:');
+	Object.keys(games).forEach((e) => log(`‣ ${ e}`));
 }
 
 
