@@ -84,7 +84,11 @@ function newGame(targetElement, commandPrompt, close_cb, params){
 				f[y][x] = {
 					elem: displayElement.appendChild(document.createElement('span')),
 					tile: tiles.empty,
-					setTile: function(t){this.tile = t; this.elem.innerHTML = t;},
+					setTile: function(t){
+						this.tile = t; 
+						this.elem.innerHTML = t;
+						(t == tiles.apple) ? this.elem.classList.add('alert') : this.elem.classList.remove('alert');
+						},
 					}
 				f[y][x].setTile(f[y][x].tile);
 				f[y][x].elem.id=(`tile ${ x},${ y}`);
@@ -200,7 +204,7 @@ function newGame(targetElement, commandPrompt, close_cb, params){
 		banner.innerText += '║ GAME OVER ║\n';
 		banner.innerText +=	'╚═══════════╝';
 		banner.style.width = '13ch';
-		banner.style.height = '3ch';
+		banner.style.height = '3em';
 	}
 	
 	function eatApple(){

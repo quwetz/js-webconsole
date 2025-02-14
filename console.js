@@ -1,6 +1,6 @@
 'use strict';
 
-export {log, setBackgroundColor, setForegroundColor, setTargetElement, runApp, closeApp, showCommandPrompt, hideCommandPrompt};
+export {log, setTargetElement, runApp, closeApp, showCommandPrompt, hideCommandPrompt};
 
 import * as cmd from './commands.js';
 
@@ -95,44 +95,6 @@ function parseCommand(commandString){
 	} else {
 		log('Unknown command: ' + command);
 	}			
-}
-
-function setBackgroundColor(params) {
-	var color = params.join(' ');
-	if(isColor(color)){
-		targetElement.style.backgroundColor = color;
-		commandPrompt.style.backgroundColor = color;
-		log(`Background color changed to ${ color}`);
-	}
-}
-
-function setForegroundColor(params) {
-	var color = params.join(' ');
-	if(isColor(color)){
-		targetElement.style.color = color;
-		commandPrompt.style.color = color;
-		log(`Foreground color changed to ${ color}`);
-	}
-}
-
-
-
-function isColor(color){
-	var illegalStrings = ['unset', 'true'];
-	if(illegalStrings.includes(color)){
-		logColorConversionError();
-		return false;
-	}
-	if(CSS.supports('color', color)){
-		return true;
-	}
-	logColorConversionError();
-	return false;
-}
-
-function logColorConversionError(){
-	log('Illegal color formatting. Use a valid css color format.');
-	log('Examples: black, rgb(0,0,0) or #000000');
 }
 
 function log(msg){

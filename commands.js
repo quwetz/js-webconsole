@@ -1,11 +1,20 @@
 'use-strict';
 
-import {log, setForegroundColor, setBackgroundColor, runApp} from './console.js';
+import {log, runApp} from './console.js';
 import {newGame as startSnake} from './snake.js';
 
 export {commands};
 
-var commands = {
+const games = {
+	snake: {
+		newGame: startSnake,
+		info: 'TODO: insert info',
+	},
+}
+
+const colorIdentifiers = ['foreground', 'background', 'alert'];
+
+const commands = {
 	help: {
 		execute: help, 
 		description: 'Provides Information about commands', 
@@ -16,20 +25,15 @@ var commands = {
 		description: 'Prints text to the  console',
 		info: 'Usage: <i>echo [text]</i><br>Example: <i>echo hello world</i>',
 		},
-	bgcolor: {
-		execute: setBackgroundColor, 
-		description: 'Sets the background color of the console',
-		info: 'Usage: <i>bgcolor (css-colorvalue)</i><br>Examples: <i>bgcolor white</i>, <i>bgcolor #F112FA</i>, <i>bgcolor rgb(0,255,255)</i>',
-		},
-	fgcolor: {
-		execute: setForegroundColor, 
-		description: 'Sets the foreground color of the  console',
-		info: 'Usage: <i>fgcolor (css-colorvalue)</i><br>Examples: <i>fgcolor white</i>, <i>fgcolor #F112FA</i>, <i>fgcolor rgb(0,255,255)</i>',
-		},
+	setcolor: {
+		execute: handleColorChange,
+		description: 'Changes the specified color',
+		info: 'Usage: <i>setcolor (identifier) (css-colorvalue)</i><br>Examples: <i>setcolor background white</i>, <i>setcolor foreground #F112FA</i>, <i>setcolor alert rgb(0,255,255)</i><br>Valid identifiers: ' + colorIdentifiers.join(', '),
+	},
 	startgame: {
 		execute: startGame,
 		description: 'Runs a game in the console',
-		info: 'Usage: <i>startgame (game_name) [parameters]...</i><br>Examples: <i>startgame minesweeper</i>, <i>startgame snake 128 64</i><br>Use <i>games</i> to list available games',
+		info: 'Usage: <i>startgame (game_name) [parameters]...</i><br>Examples: <i>startgame minesweeper</i>, <i>startgame snake</i><br>Use <i>games</i> to list available games',
 	},
 	games: {
 		execute: listGames,
@@ -37,13 +41,6 @@ var commands = {
 		info: 'Usage: <i>listGames</i>',
 	},
 };
-
-var games = {
-	snake: {
-		newGame: startSnake,
-		info: 'TODO: insert info',
-	},
-}
 
 function echo(params){
 	log(params.join());
@@ -84,4 +81,36 @@ function listGames(){
 	Object.keys(games).forEach((e) => log(`‣ ${ e}`));
 }
 
+function handleColorChange(params){
+	var colorIdentifier = params.shift();
+	if(colorIdentifiers.includes(colorIdentifier)){
+		let cssVariable = `--${ colorIdentifier}-color`;
+		changeColor(cssVariable, params.join(' '));
+		return;
+	}
+	log('Invalid color identifier. Valid identifiers are: ' + colorIdentifiers.join(', '));
+}
 
+function changeColor(cssVariable, color){
+	if(isColor(color)){
+		document.documentElement.style.setProperty(cssVariable, color);
+	}
+}
+
+function isColor(color){
+	var illegalStrings = ['unset', 'true'];
+	if(illegalStrings.includes(color)){
+		logColorConversionError();
+		return false;
+	}
+	if(CSS.supports('color', color)){
+		return true;
+	}
+	logColorConversionError();
+	return false;
+}
+
+function logColorConversionError(){
+	log('Illegal color formatting. Use a valid css color format.');
+	log('Examples: black, rgb(0,0,0) or #000000');
+}

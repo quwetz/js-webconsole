@@ -1,13 +1,24 @@
+
+:root{
+	--background-color: black;
+	--foreground-color: lime;
+	--alert-color: red;
+}
+
 body {
 	font-family: courier;
-	background-color: black;
+	background-color: var(--background-color);
 	font-size: 16px;
-	color: lime;
+	color: var(--foreground-color);
 }
 
 #console {
 	width: 99%;
 	margin: auto;
+}
+
+.alert {
+	color: var(--alert-color);
 }
 
 .posAbsolute {
@@ -23,11 +34,15 @@ body {
 	right: 0px;
 }
 
+.semitransparent {
+	alpha: 50%;
+}
+
 input[type=text] {
 	font-family: courier;
 	font-size: 16px;
-	background-color: black;
-	color: lime;
+	background-color: var(--background-color);
+	color: var(--foreground-color);
 	width: 90%;
 	border: none;
 }
