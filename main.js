@@ -2,5 +2,4 @@
  
 import * as shell from "./console.js";
 
-
-shell.setTargetElement(document.getElementById("console"));
+document.body.appendChild(shell.init());

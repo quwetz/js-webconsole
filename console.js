@@ -1,44 +1,48 @@
 'use strict';
 
-export {log, setTargetElement, runApp, closeApp, showCommandPrompt, hideCommandPrompt};
+export {init, log, runApp, closeApp};
 
 import * as cmd from './commands.js';
+import * as ui from './ui-elements.js';
 
-var targetElement;
-var logContainer;
-var commandPromptLabel;
-var commandPrompt;
+// DOM Elements
+var consoleContainer, logContainer, commandPrompt, promptInput;
 
-var logHistory = [];
 var commandHistory = [];
 var commandHistoryIndex;
 var activeApp;
 
 document.body.addEventListener('keydown', keyPressed);
 
-function setTargetElement(target){
-	if(targetElement != undefined){
-		target.innerHTML = '';
-	}
-	targetElement = target;
+function init(){
+	consoleContainer = document.createElement('div');
+	consoleContainer.id = 'webConsole';
+	consoleContainer.classList.add('webConsole');
+
+	logContainer = ui.createConsoleLog();
+	consoleContainer.appendChild(logContainer);
+
+	let promptLabel = document.createTextNode('>');
+	promptInput = ui.createCommandPrompt();
+
+	commandPrompt = document.createElement('div');
+	commandPrompt.appendChild(promptLabel);
+	commandPrompt.appendChild(promptInput);
+	consoleContainer.appendChild(commandPrompt);
 	
-	logContainer = targetElement.appendChild(document.createElement('div'));
-	commandPromptLabel = targetElement.appendChild(document.createElement('span'));
-	commandPromptLabel.innerText = '>';
-	commandPrompt = targetElement.appendChild(document.createElement('input'));
-	commandPrompt.type = 'text';
-	commandPrompt.focus();
+	promptInput.focus();
 	
+	return consoleContainer;
 }
 
 function keyPressed(){
 	if(activeApp == undefined){
 		switch (event.key){
 			case 'Enter':
-				let command = commandPrompt.value;
+				let command = promptInput.value;
 				log(`> ${ command}`);
 				run(command);
-				commandPrompt.value = '';
+				promptInput.value = '';
 				commandHistory.push(command);
 				commandHistoryIndex = undefined;
 				break;
@@ -50,7 +54,7 @@ function keyPressed(){
 						commandHistoryIndex--;
 					}
 					event.preventDefault();
-					commandPrompt.value = commandHistory[commandHistoryIndex];
+					promptInput.value = commandHistory[commandHistoryIndex];
 				}
 				break;
 			case 'ArrowDown':
@@ -60,12 +64,12 @@ function keyPressed(){
 					} else {
 						commandHistoryIndex++;
 					}
-					commandPrompt.value = commandHistory[commandHistoryIndex];
+					promptInput.value = commandHistory[commandHistoryIndex];
 				}
 				break;
 			default:
 				commandHistoryIndex = commandHistory.length - 1;
-				commandPrompt.focus();
+				promptInput.focus();
 				
 		}
 		return;
@@ -74,9 +78,6 @@ function keyPressed(){
 }
 
 function run(commandString){
-	if(targetElement == null) {
-		throw new Error('targetElement not set!');
-	}
 	if(commandString === ''){
 		return;
 	}
@@ -99,35 +100,30 @@ function parseCommand(commandString){
 
 function log(msg){
 	logContainer.innerHTML += msg+'<br>';
-	logHistory.push(msg);
 	console.log(msg);
 }
 
+/** startApp ... the apps start function. Receives receives the following parameters:
+/*		1. DOM Element to which the game should be rendered to
+/*		2. Callback for Cleanup after closing
+/*		3. Array of additional game specific parameters
+/*		startApp returns an object containing at least a keyPressed function to which keyboard input is passed while the app is running.
+/*	
+*/
 function runApp(startApp, params){
 	if(activeApp == undefined){
-		logContainer.innerHTML = ''; // TODO: hide the log and pass a new element for rendering the game 
-		activeApp = startApp(logContainer.appendChild(document.createElement('div')), commandPrompt, closeApp, params);
+		ui.hide(logContainer);
+		ui.hide(commandPrompt);
+		activeApp = startApp(consoleContainer.appendChild(document.createElement('div')), closeApp, params);
 		return;
 	}
 	throw new Error('There is already an App running');
 }
 
-function closeApp(){
-	console.log('closeApp called');
+// CleanUp Callback for apps to call when they close.
+function closeApp(targetElement){
+	consoleContainer.removeChild(targetElement);
 	activeApp = undefined;
-	showCommandPrompt();
-	logContainer.innerHTML = '';
-	for(let line of commandHistory){
-		logContainer.innerHTML += line + '<br>';
-	}
-}
-
-function showCommandPrompt(){
-	commandPromptLabel.style.visibility = 'visible';
-	commandPrompt.style.visibility = 'visible';
-}
-
-function hideCommandPrompt(){
-	commandPromptLabel.style.visibility = 'hidden';
-	commandPrompt.style.visibility = 'hidden';
+	ui.show(logContainer);
+	ui.show(commandPrompt);
 }

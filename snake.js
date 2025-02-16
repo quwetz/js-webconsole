@@ -1,9 +1,8 @@
 export {newGame};
-import {hideCommandPrompt} from './console.js';
+import * as ui from './ui-elements.js';
 
-function newGame(targetElement, commandPrompt, close_cb, params){
+function newGame(targetElement, close_cb, params){
 	
-	hideCommandPrompt();
 	var displayElement = targetElement;
 	displayElement.classList.add('posAbsolute');
 
@@ -22,7 +21,7 @@ function newGame(targetElement, commandPrompt, close_cb, params){
 	var appleY;
 	var tail = [];
 	var length = 3;
-	var inputQueue = []; // process only one keystroke per gameUpdate to prevent >=180° turning
+	var inputQueue = []; // process only one keystroke per gameUpdate to prevent >=180° turning in one frame
 
 	var tiles = {
 		empty: '&nbsp;',
@@ -60,6 +59,8 @@ function newGame(targetElement, commandPrompt, close_cb, params){
 	var intervalID = setInterval(update, 1000/fps);
 	var paused = false;
 	var gameOver = false;
+	
+	showGameOverBanner();
 	
 	return {
 		keyPressed,
@@ -115,7 +116,7 @@ function newGame(targetElement, commandPrompt, close_cb, params){
 	
 	function quit(){
 		console.log('quit called');
-		closeFunction();
+		closeFunction(targetElement);
 	}
 	
 	function keyPressed(){
@@ -198,13 +199,8 @@ function newGame(targetElement, commandPrompt, close_cb, params){
 	}
 	
 	function showGameOverBanner(){
-		var banner = displayElement.appendChild(document.createElement('div'));
-		banner.classList.add('floatingBanner');
-		banner.innerText += '╔═══════════╗\n';
-		banner.innerText += '║ GAME OVER ║\n';
-		banner.innerText +=	'╚═══════════╝';
-		banner.style.width = '13ch';
-		banner.style.height = '3em';
+		var banner = displayElement.appendChild(ui.createTextBox('GAME OVER'));
+		banner.classList.add('webConsole-floatingBanner');
 	}
 	
 	function eatApple(){
