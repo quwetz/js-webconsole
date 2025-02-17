@@ -1,6 +1,7 @@
 'use-strict';
 
-export {createConsoleLog, createCommandPrompt, show, hide, createTextBox};
+export {createConsoleLog, createCommandPrompt, show, hide, italics, createTextBox, createButton, createCommandButton};
+import {enterCommand} from './console.js';
 
 function createConsoleLog(id = 'webConsole-consoleLog', cssClass = 'webConsole') {
 	var log = document.createElement('div');
@@ -17,6 +18,18 @@ function createCommandPrompt(id = 'webConsole-commandPrompt', cssClass = 'webCon
 	return prompt;
 }
 
+function createButton({text, action, actionParameter}){
+	var button = document.createElement('button');
+	button.type = 'button';
+	button.addEventListener('click', function(){action(actionParameter);});
+	button.innerText = text;
+	button.classList.add('webConsole-button');
+	return button;
+}
+
+function createCommandButton(command, autoSubmit = false){
+	return createButton({text: command, action: enterCommand, actionParameter: {commandString: command, autoSubmit}});
+}
 
 function createTextBox(text, width = 0, height = 0){
 	var textBox = document.createElement('span');
@@ -66,4 +79,10 @@ function show(uiElement) {
 	if (uiElement.classList.contains('webConsole-doNotDisplay')) {
 		uiElement.classList.remove('webConsole-doNotDisplay');		
 	}
+}
+
+function italics(text){
+	var e = document.createElement('i');
+	e.innerText = text;
+	return e;
 }

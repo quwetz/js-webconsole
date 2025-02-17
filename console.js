@@ -1,6 +1,6 @@
 'use strict';
 
-export {init, log, runApp, closeApp};
+export {init, log, runApp, closeApp, enterCommand, enterURLFragmentAsCommand, focusPromptInput};
 
 import * as cmd from './commands.js';
 import * as ui from './ui-elements.js';
@@ -30,21 +30,18 @@ function init(){
 	commandPrompt.appendChild(promptInput);
 	consoleContainer.appendChild(commandPrompt);
 	
-	promptInput.focus();
-	
 	return consoleContainer;
+}
+
+function focusPromptInput(){
+	promptInput.focus();
 }
 
 function keyPressed(){
 	if(activeApp == undefined){
 		switch (event.key){
 			case 'Enter':
-				let command = promptInput.value;
-				log(`> ${ command}`);
-				run(command);
-				promptInput.value = '';
-				commandHistory.push(command);
-				commandHistoryIndex = undefined;
+				processPromptInput();
 				break;
 			case 'ArrowUp':
 				if(commandHistory.length > 0 ){
@@ -77,15 +74,16 @@ function keyPressed(){
 	activeApp.keyPressed();
 }
 
-function run(commandString){
+function processPromptInput(){
+	let commandString = promptInput.value;
+	log(`> ${ commandString}`);
+	commandHistoryIndex = undefined;
 	if(commandString === ''){
 		return;
 	}
-	if(activeApp == undefined){
-		parseCommand(commandString);
-	} else {
-		activeApp.run(commandString);
-	}
+	commandHistory.push(commandString);
+	promptInput.value = '';
+	parseCommand(commandString);
 }
 
 function parseCommand(commandString){
@@ -99,8 +97,28 @@ function parseCommand(commandString){
 }
 
 function log(msg){
-	logContainer.innerHTML += msg+'<br>';
-	console.log(msg);
+	if(typeof(msg) == 'string'){
+		let logLine = document.createElement('div');
+		logLine.innerText = msg;
+		logContainer.appendChild(logLine);
+		return;
+	}
+	if(msg instanceof HTMLElement){
+		logContainer.appendChild(msg);
+		return;
+	}
+	if(Array.isArray(msg)){
+		let logLine = document.createElement('div');
+		for(let e of msg){
+			if (e instanceof HTMLElement){
+				logContainer.appendChild(e);
+			} else {
+				logContainer.appendChild(document.createTextNode(e));
+			}
+		}
+		logContainer.appendChild(logLine);
+		return;
+	}
 }
 
 /** startApp ... the apps start function. Receives receives the following parameters:
@@ -126,4 +144,26 @@ function closeApp(targetElement){
 	activeApp = undefined;
 	ui.show(logContainer);
 	ui.show(commandPrompt);
+}
+
+function enterCommand({commandString, autoSubmit = false, clear = true, initialDelay = 0}){
+	var delay = initialDelay;
+	if(clear) {
+		promptInput.value ='';
+	}
+	for (let c of commandString){
+		setTimeout(() => (promptInput.value += c), delay);
+		delay += (Math.random() * 10) + 10;
+	}
+	if(autoSubmit) {
+		setTimeout(processPromptInput, delay + 400);
+	} else {
+		setTimeout(() => (promptInput.value += ' '), delay);
+	}
+	focusPromptInput();
+}
+
+function enterURLFragmentAsCommand(){
+	let command = window.location.hash.substring(1).replaceAll('%20', ' ');
+	enterCommand({commandString: command, autoSubmit: true, initialDelay: 400});
 }

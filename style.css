@@ -3,12 +3,12 @@
 	--background-color: black;
 	--foreground-color: lime;
 	--alert-color: red;
+	--font-size: 18px;
 }
 
 body {
-	font-family: courier;
 	background-color: var(--background-color);
-	font-size: 16px;
+	font-size: var(--font-size);
 	color: var(--foreground-color);
 	line-height: 1em;
 }
@@ -24,6 +24,14 @@ body {
 
 .posAbsolute {
 	position: relative;
+}
+
+.webConsole-button {
+	border: none;
+	border-radius: 2px;
+	margin: 1px;
+	background-color: var(--foreground-color);
+	color: var(--background-color);
 }
 
 .webConsole-floatingBanner {
@@ -45,7 +53,7 @@ body {
 
 .webConsole {
 	font-family: courier;
-	font-size: 16px;
+	font-size: var(--font-size);
 	background-color: var(--background-color);
 	color: var(--foreground-color);
 	width: 90%;

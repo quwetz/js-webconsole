@@ -30,6 +30,9 @@ function newGame(targetElement, close_cb, params){
 		apple: '֍',
 	}
 	
+	var pauseTextBox = ui.createTextBox('Game paused');
+	ui.hide(pauseTextBox);
+	
 	var score = (function(){
 		const blankFillElement = document.createElement('span');
 		const scoreTextElement = document.createElement('span');
@@ -60,11 +63,10 @@ function newGame(targetElement, close_cb, params){
 	var paused = false;
 	var gameOver = false;
 	
-	showGameOverBanner();
-	
 	return {
 		keyPressed,
 	};
+	
 	
 	function initField(){
 		displayElement.innerHTML = '';
@@ -99,6 +101,8 @@ function newGame(targetElement, close_cb, params){
 		}
 		displayElement.appendChild(document.createTextNode('╚' + '═'.repeat(width) + '╝'));
 		displayElement.appendChild(document.createElement('br'));
+		displayElement.appendChild(pauseTextBox);
+		pauseTextBox.classList.add('webConsole-floatingBanner');
 		return f;
 	}
 
@@ -143,10 +147,12 @@ function newGame(targetElement, close_cb, params){
 	
 	function endPause(){
 		intervalID = setInterval(update, 1000/fps);
+		ui.hide(pauseTextBox);
 	}
 	
 	function startPause(){
 		clearInterval(intervalID);
+		ui.show(pauseTextBox);
 	}
 	
 	function update(){
@@ -207,7 +213,6 @@ function newGame(targetElement, close_cb, params){
 			length += 1;
 			score.increase(10);
 			fps = 15 + Math.sqrt(2 * length);
-			console.log(fps);
 			placeApple();
 	}
 
@@ -221,9 +226,8 @@ function newGame(targetElement, close_cb, params){
 		playerX = (playerX + width) % width;
 		playerY += velocityY;
 		playerY = (playerY + height) % height;
-		checkCollisions();
 		field[playerY][playerX].setTile(tiles.head);
- 
+		checkCollisions();
 	}
 
 	function updateTail(){
