@@ -19,13 +19,13 @@ function createCommandPrompt(id = 'webConsole-commandPrompt', cssClass = 'webCon
 }
 
 // options: array of strings
-function createOptionsMenu(options, autoSubmit = false){
+function createOptionsMenu(options, autoSubmit = false, clear = false){
 	var menuElement = document.createElement('div');
 	var width = Math.max(...(options.map((s) => (s.length))));
 	menuElement.classList.add('webConsole-contextMenu');
 	
 	for(let option of options){
-		let button = createCommandButton(option, autoSubmit);
+		let button = createCommandButton(option, autoSubmit, clear);
 		button.style.width = width + '.5ch';
 		let div = document.createElement('div');
 		div.appendChild(button);
@@ -33,18 +33,21 @@ function createOptionsMenu(options, autoSubmit = false){
 	}
 	return menuElement;
 }
+			
 
 function createButton({text, action, actionParameter}){
 	var button = document.createElement('button');
 	button.type = 'button';
-	button.addEventListener('click', function(){action(actionParameter);});
+	button.addEventListener('click', function(){
+			action(actionParameter);
+			});
 	button.innerText = text;
 	button.classList.add('webConsole-button');
 	return button;
 }
 
-function createCommandButton(command, autoSubmit = false){
-	return createButton({text: command, action: enterCommand, actionParameter: {commandString: command, autoSubmit}});
+function createCommandButton(command, autoSubmit = false, clear = true){
+	return createButton({text: command, action: enterCommand, actionParameter: {commandString: command, autoSubmit: autoSubmit,clear: clear }});
 }
 
 function createTextBox(text, width = 0, height = 0){

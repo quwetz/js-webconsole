@@ -15,7 +15,7 @@ var activeApp;
 var contextMenu;
 
 document.body.addEventListener('keydown', keyPressed);
-document.addEventListener('mouseup', mouseUp);
+document.body.addEventListener('mouseup', mouseUp);
 
 function init(){
 	consoleContainer = document.createElement('div');
@@ -29,6 +29,7 @@ function init(){
 	promptInput = ui.createCommandPrompt();
 
 	commandPrompt = document.createElement('div');
+	commandPrompt.classList.add('posRelative');
 	commandPrompt.appendChild(promptLabel);
 	commandPrompt.appendChild(promptInput);
 	consoleContainer.appendChild(commandPrompt);
@@ -41,19 +42,24 @@ function focusPromptInput(){
 }
 
 function mouseUp(){
-	//removeContextMenu();
+	// TODO: find out why the contextmenu gets removed before the buttons event handler is processed, if removeContextMenus is called directly. Usage of setTimeout() is just a workaround here...
+	setTimeout(removeContextMenus, 1);
 }
 
-function removeContextMenu(){
-	if(contextMenu != undefined) {
-			contextMenu.remove();
-			contextMenu = undefined;
-		}
+function removeContextMenus(){
+	removeElementsByClass('webConsole-contextMenu');
+}
+
+function removeElementsByClass(className) {
+    let elements = document.getElementsByClassName(className);
+    while(elements.length > 0) {
+        elements[0].parentNode.removeChild(elements[0]);
+    }
 }
 
 function keyPressed(){
 	if(activeApp == undefined){
-		removeContextMenu();
+		removeContextMenus();
 		switch (event.key){
 			case 'Enter':
 				processPromptInput();
@@ -178,13 +184,12 @@ function enterCommand({commandString, autoSubmit = false, clear = true, initialD
 	}
 	
 	let command = cmd.commands[commandString];
-	if(command != undefined && command.hasOwnProperty('options')){
+	if(!autoSubmit && command != undefined && command.hasOwnProperty('options')){
 		setTimeout(function(){
 			contextMenu = ui.createOptionsMenu(command.options, autoSubmit);
 			commandPrompt.appendChild(contextMenu);
-			// contextMenu.style.top = contextMenu.style.height;
-			contextMenu.style.left = promptInput.selectionStart + 'ch';
-			console.log(promptInput.selectionStart);
+			contextMenu.style.bottom = '0em';
+			contextMenu.style.left = (promptInput.selectionStart + 1) + 'ch';
 		}, delay);
 		
 	}

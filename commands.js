@@ -53,7 +53,7 @@ const commands = {
 		noAdditionalParameters: false,
 		options: Object.keys(games),
 	},
-	games: {
+	listgames: {
 		execute: listGames,
 		description: 'Lists all available games',
 		info: ui.htmlFromString({text: 'Usage: <i>listGames</i>'}),
@@ -79,7 +79,7 @@ function help(params){
 		Object.keys(commands).forEach((e) => log([cmdBtn(e, commands[e].noAdditionalParameters), ` - ${ commands[e].description}`]));
 		log('');
 		
-		log(ui.htmlFromString({text: 'For detailed Information use <i>help [command]</i>'}));
+		log(ui.htmlFromString({text: 'For detailed information use <i>help [command]</i>'}));
 		return;
 	}
 	if(Object.keys(commands).includes(params[0])){

@@ -23,7 +23,7 @@ body {
 	color: var(--alert-color);
 }
 
-.posAbsolute {
+.posRelative {
 	position: relative;
 }
 
@@ -32,11 +32,12 @@ body {
 	font-size: inherit;
 	padding-top: 0px;
 	padding-bottom: 0px;
-	border: none;
+	border: 1px;
 	border-radius: 2px;
 	margin: 1px;
 	background-color: var(--foreground-color);
 	color: var(--background-color);
+	opacity: 1.0;
 }
 
 .webConsole-floatingBanner {
@@ -68,8 +69,9 @@ body {
 
 .webConsole-contextMenu {
 	position: absolute;
-	font-size: calc(var(--font-size) - 4px);
+	background-color: var(--background-color);
+	font-size: calc(var(--font-size) - 0px);
 	height: fit-content;
 	width: fit-content;
-	opacity: 0.8;
+	opacity: 1.0;
 }

@@ -4,7 +4,7 @@ import * as ui from './ui-elements.js';
 function newGame(targetElement, close_cb, params){
 	
 	var displayElement = targetElement;
-	displayElement.classList.add('posAbsolute');
+	displayElement.classList.add('posRelative');
 
 	var closeFunction = close_cb;
 	
