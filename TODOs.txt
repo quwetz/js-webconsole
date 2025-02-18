@@ -1,2 +1,4 @@
 Colorthemes
-UI Elements
+configurations lokal speichern
+ui dropdown
+commanparsing refaktorisieren, sodass immer nur der erste token abgetrennt wird, damit zb bei echo whitespace erhalten bleibt

@@ -22,62 +22,50 @@ const commands = {
 	home: {
 		execute: home, 
 		description: 'Displays landing page content', 
-		info: stringToDiv('Usage: <i>home</i>'),
+		info: ui.htmlFromString({text: 'Usage: <i>home</i>'}),
 		noAdditionalParameters: true,
-	},
-	add: {
-		execute: addThatCrap,
-		description: 'adds 2 numbers',
-		info: stringToDiv('how should I know?'),
-		noAdditionalParameters: false,
 	},
 	help: {
 		execute: help, 
 		description: 'Provides Information about commands', 
-		info: stringToDiv('Usage: <i>help [command]</i><br>Examples: <i>help fgcolor</i>'),
+		info: ui.htmlFromString({text: 'Usage: <i>help [command]</i><br>Examples: <i>help fgcolor</i>'}),
 		noAdditionalParameters: false,
 		},
 		
 	echo: {	
 		execute: log, 
 		description: 'Prints text to the  console',
-		info: stringToDiv('Usage: <i>echo [text]</i><br>Example: <i>echo hello world</i>'),
+		info: ui.htmlFromString({text: 'Usage: <i>echo [text]</i><br>Example: <i>echo hello world</i>'}),
 		noAdditionalParameters: false,
 		},
 	setcolor: {
 		execute: handleColorChange,
 		description: 'Changes the specified color',
-		info: stringToDiv('Usage: <i>setcolor (identifier) (css-colorvalue)</i><br>Examples: <i>setcolor background white</i>, <i>setcolor foreground #F112FA</i>, <i>setcolor alert rgb(0,255,255)</i><br>Valid identifiers: ' + colorIdentifiers.join(', ')),
+	info: ui.htmlFromString({text: 'Usage: <i>setcolor (identifier) (css-colorvalue)</i><br>Examples: <i>setcolor background white</i>, <i>setcolor foreground #F112FA</i>, <i>setcolor alert rgb(0,255,255)</i><br>Valid identifiers: ' + colorIdentifiers.join(', ')}),
 		noAdditionalParameters: false,
 	},
 	startgame: {
 		execute: startGame,
 		description: 'Runs a game in the console',
-		info: stringToDiv('Usage: <i>startgame (game_name) [parameters]...</i><br>Example: <i>startgame snake</i><br>Use <i>games</i> to list available games'),
+		info: ui.htmlFromString({text: 'Usage: <i>startgame (game_name) [parameters]...</i><br>Example: <i>startgame snake</i><br>Use <i>games</i> to list available games'}),
 		noAdditionalParameters: false,
 	},
 	games: {
 		execute: listGames,
 		description: 'Lists all available games',
-		info: stringToDiv('Usage: <i>listGames</i>'),
+		info: ui.htmlFromString({text: 'Usage: <i>listGames</i>'}),
 		noAdditionalParameters: true,
 	},
 	setfontsize: {
 		execute: setFontSize,
 		description: 'Sets the consoles font size',
-		info: stringToDiv('Usage: <i>setfontsize (css-fontsize)</i><br>Example: <i>setfontsize 14px</i>'),
+		info: ui.htmlFromString({text: 'Usage: <i>setfontsize (css-fontsize)</i><br>Example: <i>setfontsize 14px</i>'}),
 		noAdditionalParameters: false,
 	},
 };
 
-function stringToDiv(s){
-	var e = document.createElement('div');
-	e.innerHTML = s;
-	return e;
-}
-
 function echo(params){
-	log(params.join());
+	log(params.join(' '));
 }
 
 function help(params){
@@ -86,7 +74,7 @@ function help(params){
 		Object.keys(commands).forEach((e) => log([cmdBtn(e, commands[e].noAdditionalParameters), ` - ${ commands[e].description}`]));
 		log('');
 		
-		log(['For detailed Information use ', ui.italics('help [command]')]);
+		log(ui.htmlFromString({text: 'For detailed Information use <i>help [command]</i>'}));
 		return;
 	}
 	if(Object.keys(commands).includes(params[0])){
@@ -95,10 +83,6 @@ function help(params){
 		return;
 	}
 	log('Unknown command: ' + params[0]);
-}
-
-function addThatCrap(params){
-	log(params[0]+params[1]);
 }
 
 function home(){

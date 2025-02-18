@@ -1,6 +1,6 @@
 'use-strict';
 
-export {createConsoleLog, createCommandPrompt, show, hide, italics, createTextBox, createButton, createCommandButton};
+export {createConsoleLog, createCommandPrompt, show, hide, htmlFromString, createTextBox, createButton, createCommandButton};
 import {enterCommand} from './console.js';
 
 function createConsoleLog(id = 'webConsole-consoleLog', cssClass = 'webConsole') {
@@ -81,8 +81,8 @@ function show(uiElement) {
 	}
 }
 
-function italics(text){
-	var e = document.createElement('i');
-	e.innerText = text;
+function htmlFromString({text: s, parentElement = 'div'}){
+	var e = document.createElement(parentElement);
+	e.innerHTML = s;
 	return e;
 }
