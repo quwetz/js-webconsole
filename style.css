@@ -4,6 +4,7 @@
 	--foreground-color: lime;
 	--alert-color: red;
 	--font-size: 18px;
+	--font: courier;
 }
 
 body {
@@ -27,6 +28,10 @@ body {
 }
 
 .webConsole-button {
+	font-family: inherit;
+	font-size: inherit;
+	padding-top: 0px;
+	padding-bottom: 0px;
 	border: none;
 	border-radius: 2px;
 	margin: 1px;
@@ -52,7 +57,7 @@ body {
 }
 
 .webConsole {
-	font-family: courier;
+	font-family: var(--font);
 	font-size: var(--font-size);
 	background-color: var(--background-color);
 	color: var(--foreground-color);
@@ -61,6 +66,10 @@ body {
 	outline: none;
 }
 
-/*input[type=text]:focus {
-  outline: none;
-}*/
+.webConsole-contextMenu {
+	position: absolute;
+	font-size: calc(var(--font-size) - 4px);
+	height: fit-content;
+	width: fit-content;
+	opacity: 0.8;
+}

@@ -12,7 +12,10 @@ var commandHistory = [];
 var commandHistoryIndex;
 var activeApp;
 
+var contextMenu;
+
 document.body.addEventListener('keydown', keyPressed);
+document.addEventListener('mouseup', mouseUp);
 
 function init(){
 	consoleContainer = document.createElement('div');
@@ -37,8 +40,20 @@ function focusPromptInput(){
 	promptInput.focus();
 }
 
+function mouseUp(){
+	//removeContextMenu();
+}
+
+function removeContextMenu(){
+	if(contextMenu != undefined) {
+			contextMenu.remove();
+			contextMenu = undefined;
+		}
+}
+
 function keyPressed(){
 	if(activeApp == undefined){
+		removeContextMenu();
 		switch (event.key){
 			case 'Enter':
 				processPromptInput();
@@ -156,9 +171,22 @@ function enterCommand({commandString, autoSubmit = false, clear = true, initialD
 		delay += (Math.random() * 10) + 10;
 	}
 	if(autoSubmit) {
-		setTimeout(processPromptInput, delay + 400);
+		delay += 400
+		setTimeout(processPromptInput, delay);
 	} else {
 		setTimeout(() => (promptInput.value += ' '), delay);
+	}
+	
+	let command = cmd.commands[commandString];
+	if(command != undefined && command.hasOwnProperty('options')){
+		setTimeout(function(){
+			contextMenu = ui.createOptionsMenu(command.options, autoSubmit);
+			commandPrompt.appendChild(contextMenu);
+			// contextMenu.style.top = contextMenu.style.height;
+			contextMenu.style.left = promptInput.selectionStart + 'ch';
+			console.log(promptInput.selectionStart);
+		}, delay);
+		
 	}
 	focusPromptInput();
 }

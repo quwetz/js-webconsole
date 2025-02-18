@@ -30,6 +30,7 @@ const commands = {
 		description: 'Provides Information about commands', 
 		info: ui.htmlFromString({text: 'Usage: <i>help [command]</i><br>Examples: <i>help fgcolor</i>'}),
 		noAdditionalParameters: false,
+		options: undefined, //set after initialisation
 		},
 		
 	echo: {	
@@ -41,14 +42,16 @@ const commands = {
 	setcolor: {
 		execute: handleColorChange,
 		description: 'Changes the specified color',
-	info: ui.htmlFromString({text: 'Usage: <i>setcolor (identifier) (css-colorvalue)</i><br>Examples: <i>setcolor background white</i>, <i>setcolor foreground #F112FA</i>, <i>setcolor alert rgb(0,255,255)</i><br>Valid identifiers: ' + colorIdentifiers.join(', ')}),
+		info: ui.htmlFromString({text: 'Usage: <i>setcolor (identifier) (css-colorvalue)</i><br>Examples: <i>setcolor background white</i>, <i>setcolor foreground #F112FA</i>, <i>setcolor alert rgb(0,255,255)</i><br>Valid identifiers: ' + colorIdentifiers.join(', ')}),
 		noAdditionalParameters: false,
+		options: colorIdentifiers,
 	},
 	startgame: {
 		execute: startGame,
 		description: 'Runs a game in the console',
 		info: ui.htmlFromString({text: 'Usage: <i>startgame (game_name) [parameters]...</i><br>Example: <i>startgame snake</i><br>Use <i>games</i> to list available games'}),
 		noAdditionalParameters: false,
+		options: Object.keys(games),
 	},
 	games: {
 		execute: listGames,
@@ -63,6 +66,8 @@ const commands = {
 		noAdditionalParameters: false,
 	},
 };
+
+commands.help.options = Object.keys(commands);
 
 function echo(params){
 	log(params.join(' '));

@@ -1,6 +1,6 @@
 'use-strict';
 
-export {createConsoleLog, createCommandPrompt, show, hide, htmlFromString, createTextBox, createButton, createCommandButton};
+export {createConsoleLog, createCommandPrompt, show, hide, htmlFromString, createTextBox, createButton, createCommandButton, createOptionsMenu};
 import {enterCommand} from './console.js';
 
 function createConsoleLog(id = 'webConsole-consoleLog', cssClass = 'webConsole') {
@@ -16,6 +16,22 @@ function createCommandPrompt(id = 'webConsole-commandPrompt', cssClass = 'webCon
 	prompt.id = id;
 	prompt.classList.add(cssClass);
 	return prompt;
+}
+
+// options: array of strings
+function createOptionsMenu(options, autoSubmit = false){
+	var menuElement = document.createElement('div');
+	var width = Math.max(...(options.map((s) => (s.length))));
+	menuElement.classList.add('webConsole-contextMenu');
+	
+	for(let option of options){
+		let button = createCommandButton(option, autoSubmit);
+		button.style.width = width + '.5ch';
+		let div = document.createElement('div');
+		div.appendChild(button);
+		menuElement.appendChild(div);
+	}
+	return menuElement;
 }
 
 function createButton({text, action, actionParameter}){
