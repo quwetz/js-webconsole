@@ -97,11 +97,22 @@ function home(){
 
 function setFontSize(params){
 	var sizeString = params.join(' ');
+	let num = parseInt(sizeString);
+	if(num <= 0){
+		log('The font size has to be bigger than 0');
+		return;
+	}
 	if(CSS.supports('font-size', sizeString)){
 		document.documentElement.style.setProperty('--font-size', sizeString);
 		log('Font size changed to ' + sizeString);
 	} else {
-		log(sizeString + ' is not a supported CSS font size');
+		if (!isNaN(sizeString)){
+			sizeString = num + 'px';
+			document.documentElement.style.setProperty('--font-size', sizeString);
+			log('Font size changed to ' + sizeString);
+		} else {
+			log(params.join(' ') + ' is not a supported CSS font size');
+		}
 	}
 }
 
