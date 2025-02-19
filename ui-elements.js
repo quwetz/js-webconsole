@@ -33,7 +33,6 @@ function createOptionsMenu(options, autoSubmit = false, clear = false){
 	}
 	return menuElement;
 }
-			
 
 function createButton({text, action, actionParameter}){
 	var button = document.createElement('button');

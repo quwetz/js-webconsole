@@ -5,13 +5,14 @@ function newGame(targetElement, close_cb, params){
 	
 	var displayElement = targetElement;
 	displayElement.classList.add('posRelative');
+	displayElement.classList.add('webConsole-snake');
 
 	var closeFunction = close_cb;
 	
 	var width = 32;
 	var height = 16;
 	displayElement.style.width = (width + 2) + 'ch';
-	displayElement.style.height = (width + 4) + 'ch';
+	displayElement.style.height = (height + 4) + 'ch';
 	
 	var playerX = 0;
 	var playerY = 0;

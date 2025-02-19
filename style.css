@@ -75,3 +75,7 @@ body {
 	width: fit-content;
 	opacity: 1.0;
 }
+
+.webConsole-snake {
+	line-height: 1ch;
+}
