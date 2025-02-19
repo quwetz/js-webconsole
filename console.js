@@ -1,6 +1,6 @@
 'use strict';
 
-export {init, log, runApp, closeApp, enterCommand, enterURLFragmentAsCommand, focusPromptInput};
+export {init, log, runApp, closeApp, enterCommand, focusPromptInput};
 
 import * as cmd from './commands.js';
 import * as ui from './ui-elements.js';
@@ -196,7 +196,3 @@ function enterCommand({commandString, autoSubmit = false, clear = true, initialD
 	focusPromptInput();
 }
 
-function enterURLFragmentAsCommand(){
-	let command = window.location.hash.substring(1).replaceAll('%20', ' ');
-	enterCommand({commandString: command, autoSubmit: true, initialDelay: 400});
-}

@@ -76,7 +76,7 @@ function echo(params){
 function help(params){
 	if (params[0] == undefined){
 		log('Available Commands:');
-		Object.keys(commands).forEach((e) => log([cmdBtn(e, commands[e].noAdditionalParameters), ` - ${ commands[e].description}`]));
+		Object.keys(commands).forEach((e) => log([cmdBtn({commandString: e, autoSubmit: commands[e].noAdditionalParameters}), ` - ${ commands[e].description}`]));
 		log('');
 		
 		log(ui.htmlFromString({text: 'For detailed information use <i>help [command]</i>'}));
@@ -92,7 +92,7 @@ function help(params){
 
 function home(){
 	log('Hello and welcome to my Website!');
-	log(['Enter or click ', cmdBtn('help', true), ' for a list of available commands']);
+	log(['Enter or click ', cmdBtn({commandString: 'help', autoSubmit: true}), ' for a list of available commands']);
 }
 
 function setFontSize(params){

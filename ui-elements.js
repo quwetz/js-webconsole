@@ -25,7 +25,7 @@ function createOptionsMenu(options, autoSubmit = false, clear = false){
 	menuElement.classList.add('webConsole-contextMenu');
 	
 	for(let option of options){
-		let button = createCommandButton(option, autoSubmit, clear);
+		let button = createCommandButton({commandString: option, autoSubmit, clear: clear});
 		button.style.width = width + '.5ch';
 		let div = document.createElement('div');
 		div.appendChild(button);
@@ -46,8 +46,8 @@ function createButton({text, action, actionParameter}){
 	return button;
 }
 
-function createCommandButton(command, autoSubmit = false, clear = true){
-	return createButton({text: command, action: enterCommand, actionParameter: {commandString: command, autoSubmit: autoSubmit,clear: clear }});
+function createCommandButton({commandString, autoSubmit = false, clear = true}){
+	return createButton({text: commandString, action: enterCommand, actionParameter: {commandString: commandString, autoSubmit: autoSubmit,clear: clear }});
 }
 
 function createTextBox(text, width = 0, height = 0){

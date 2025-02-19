@@ -70,7 +70,7 @@ body {
 .webConsole-contextMenu {
 	position: absolute;
 	background-color: var(--background-color);
-	font-size: calc(var(--font-size) - 0px);
+	font-size: var(--font-size);
 	height: fit-content;
 	width: fit-content;
 	opacity: 1.0;
