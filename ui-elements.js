@@ -1,6 +1,6 @@
 'use-strict';
 
-export {createConsoleLog, createCommandPrompt, show, hide, htmlFromString, createTextBox, createButton, createCommandButton, createOptionsMenu};
+export {createConsoleLog, createCommandPrompt, show, hide, htmlFromString, createTextBox, createButton, createCommandButton, createOptionsMenu, createAutoCompleteHelp};
 import {enterCommand} from './console.js';
 
 function createConsoleLog(id = 'webConsole-consoleLog', cssClass = 'webConsole') {
@@ -18,20 +18,30 @@ function createCommandPrompt(id = 'webConsole-commandPrompt', cssClass = 'webCon
 	return prompt;
 }
 
-// options: array of strings
-function createOptionsMenu(options, autoSubmit = false, clear = false){
+function createOptionsMenu(options){
 	var menuElement = document.createElement('div');
-	var width = Math.max(...(options.map((s) => (s.length))));
-	menuElement.classList.add('webConsole-contextMenu');
+	var width = Math.max(...(options.items.map((s) => (s.length))));
+	menuElement.classList.add('webConsole-optionsMenu');
 	
-	for(let option of options){
-		let button = createCommandButton({commandString: option, autoSubmit, clear: clear});
+	for(let option of options.items){
+		let button = createCommandButton({commandString: option, autoSubmit: false, clear: false});
 		button.style.width = width + '.5ch';
 		let div = document.createElement('div');
 		div.appendChild(button);
 		menuElement.appendChild(div);
 	}
+	if (!options.mandatory){
+		menuElement.appendChild(createSubmitButton(width));
+	}
 	return menuElement;
+}
+
+function createSubmitButton(width){
+	let button = createCommandButton({commandString: '↵', autoSubmit: true, clear: false});
+	button.style.width = width + '.5ch';
+	let div = document.createElement('div');
+	div.appendChild(button);
+	return div;
 }
 
 function createButton({text, action, actionParameter}){
@@ -103,4 +113,21 @@ function htmlFromString({text: s, parentElement = 'div'}){
 	var e = document.createElement(parentElement);
 	e.innerHTML = s;
 	return e;
+}
+
+function createAutoCompleteHelp(options){
+	var wrapper = document.createElement('div');
+	wrapper.id = 'webConsole-autoCompleteHelp';
+	wrapper.classList.add('webConsole-autoCompleteHelp');
+
+	if(typeof options.items != 'string'){
+		let om = wrapper.appendChild(createOptionsMenu(options));
+	}
+
+	var label = document.createElement('div');
+	label.innerText = options.label;
+	label.classList.add('webConsole-autoCompleteHelp-label')
+	wrapper.appendChild(label);
+
+	return wrapper;
 }

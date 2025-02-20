@@ -67,15 +67,36 @@ body {
 	outline: none;
 }
 
-.webConsole-contextMenu {
-	position: absolute;
-	background-color: var(--background-color);
-	font-size: var(--font-size);
-	height: fit-content;
-	width: fit-content;
-	opacity: 1.0;
-}
-
 .webConsole-snake {
 	line-height: 1ch;
+}
+
+.webConsole-autoCompleteHelp {
+	position: absolute;
+	height: fit-content;
+	width: fit-content;
+	bottom: 1px;
+	border-width: 1px;
+	border-radius: 2px;
+	border-color: var(--foreground-color);
+	border-style: solid;
+}
+
+.webConsole-optionsMenu-label {
+	opacity: 0.5;
+}
+
+.webConsole-optionsMenu {
+	background-color: var(--background-color);
+	font-size: 0px;
+	line-height: 0em;
+	height: 0px;
+	width: fit-content;
+	transition: height 0.25s ease,
+				font-size 0.25s ease,
+}
+
+.webConsole-autoCompleteHelp:hover .webConsole-optionsMenu{
+	height: fit-content;
+	font-size: var(--font-size);
 }

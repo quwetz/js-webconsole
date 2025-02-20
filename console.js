@@ -60,7 +60,7 @@ function removeElementsByClass(className) {
 function keyPressed(){
 	if(activeApp == undefined){
 		removeContextMenus();
-		switch (event.key){
+		switch (event.key){			
 			case 'Enter':
 				processPromptInput();
 				break;
@@ -88,7 +88,7 @@ function keyPressed(){
 			default:
 				commandHistoryIndex = commandHistory.length - 1;
 				promptInput.focus();
-				
+				setTimeout(displayAutoCompleteHelp, 100);
 		}
 		return;
 	}
@@ -176,6 +176,7 @@ function enterCommand({commandString, autoSubmit = false, clear = true, initialD
 		setTimeout(() => (promptInput.value += c), delay);
 		delay += (Math.random() * 10) + 10;
 	}
+
 	if(autoSubmit) {
 		delay += 400
 		setTimeout(processPromptInput, delay);
@@ -183,16 +184,26 @@ function enterCommand({commandString, autoSubmit = false, clear = true, initialD
 		setTimeout(() => (promptInput.value += ' '), delay);
 	}
 	
-	let command = cmd.commands[commandString];
-	if(!autoSubmit && command != undefined && command.hasOwnProperty('options')){
-		setTimeout(function(){
-			contextMenu = ui.createOptionsMenu(command.options, autoSubmit);
-			commandPrompt.appendChild(contextMenu);
-			contextMenu.style.bottom = '0em';
-			contextMenu.style.left = (promptInput.selectionStart + 1) + 'ch';
-		}, delay);
-		
-	}
+	delay += 100;
+	setTimeout(displayAutoCompleteHelp, delay);
+	
+	// let command = cmd.commands[commandString];
+	// if(!autoSubmit && command != undefined && command.hasOwnProperty('options')){
+		// setTimeout(function(){
+			// contextMenu = ui.createOptionsMenu(command.options, autoSubmit);
+			// commandPrompt.appendChild(contextMenu);
+			// contextMenu.style.bottom = '0em';
+			// contextMenu.style.left = (promptInput.selectionStart + 1) + 'ch';
+		// }, delay);	
+	// }
 	focusPromptInput();
 }
 
+function displayAutoCompleteHelp(){
+	removeElementsByClass('webConsole-autoCompleteHelp')
+	var options = cmd.nextOptions(promptInput.value);
+	if (options == undefined) return;
+	let element = ui.createAutoCompleteHelp(options);
+	commandPrompt.appendChild(element);
+	element.style.left = (promptInput.selectionStart + 2) + 'ch';
+}

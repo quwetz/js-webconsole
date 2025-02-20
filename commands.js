@@ -5,9 +5,7 @@ import {newGame as startSnake} from './snake.js';
 import * as ui from './ui-elements.js';
 import {createCommandButton as cmdBtn} from './ui-elements.js';
 
-export {commands};
-
-const parser = new DOMParser();
+export {commands, nextOptions};
 
 const games = {
 	snake: {
@@ -24,6 +22,7 @@ const commands = {
 		description: 'Displays landing page content', 
 		info: ui.htmlFromString({text: 'Usage: <i>home</i>'}),
 		noAdditionalParameters: true,
+		structure: [],
 	},
 	help: {
 		execute: help, 
@@ -31,6 +30,7 @@ const commands = {
 		info: ui.htmlFromString({text: 'Usage: <i>help [command]</i><br>Examples: <i>help fgcolor</i>'}),
 		noAdditionalParameters: false,
 		options: undefined, //set after initialisation
+		structure: [{label: 'command', items: undefined, mandatory: false}],
 		},
 		
 	echo: {	
@@ -38,6 +38,7 @@ const commands = {
 		description: 'Prints text to the  console',
 		info: ui.htmlFromString({text: 'Usage: <i>echo [text]</i><br>Example: <i>echo hello world</i>'}),
 		noAdditionalParameters: false,
+		structure: [{label: 'text', items: 'text', mandatory: false}],
 		},
 	setcolor: {
 		execute: handleColorChange,
@@ -45,29 +46,34 @@ const commands = {
 		info: ui.htmlFromString({text: 'Usage: <i>setcolor (identifier) (css-colorvalue)</i><br>Examples: <i>setcolor background white</i>, <i>setcolor foreground #F112FA</i>, <i>setcolor alert rgb(0,255,255)</i><br>Valid identifiers: ' + colorIdentifiers.join(', ')}),
 		noAdditionalParameters: false,
 		options: colorIdentifiers,
+		structure: [{label: 'identifier', items: colorIdentifiers, mandatory: true}, {label: 'color', items: 'color', mandatory: true}],
 	},
-	startgame: {
+	start: {
 		execute: startGame,
 		description: 'Runs a game in the console',
 		info: ui.htmlFromString({text: 'Usage: <i>startgame (game_name) [parameters]...</i><br>Example: <i>startgame snake</i><br>Use <i>games</i> to list available games'}),
 		noAdditionalParameters: false,
 		options: Object.keys(games),
+		structure: [{label: 'game', items: Object.keys(games), mandatory: true}],
 	},
 	listgames: {
 		execute: listGames,
 		description: 'Lists all available games',
 		info: ui.htmlFromString({text: 'Usage: <i>listGames</i>'}),
 		noAdditionalParameters: true,
+		structure: [],
 	},
 	setfontsize: {
 		execute: setFontSize,
 		description: 'Sets the consoles font size',
 		info: ui.htmlFromString({text: 'Usage: <i>setfontsize (css-fontsize)</i><br>Example: <i>setfontsize 14px</i>'}),
 		noAdditionalParameters: false,
+		structure: [{label: 'size', items: 'size', mandatory: true}],
 	},
 };
 
 commands.help.options = Object.keys(commands);
+commands.help.structure[0].items = Object.keys(commands);
 
 function echo(params){
 	log(params.join(' '));
@@ -181,4 +187,30 @@ function isColor(color){
 function logColorConversionError(){
 	log('Illegal color formatting. Use a valid css color format.');
 	log('Examples: black, rgb(0,0,0) or #000000');
+}
+
+
+/**	Goes through currentInput and the commands chain and returns the next possible options.
+/*	Returns undefined if there are no options for the currentInput. (Either the input is not a valid command or there are no more options)
+/*
+*/
+function nextOptions(currentInput){
+	var commandChain = currentInput.trim().split(' ').filter((s) => (s != ''));
+	if (commandChain.length == 0) return undefined;
+	let currentToken = commandChain.shift();
+	if (!commands.hasOwnProperty(currentToken)) return undefined;
+	
+	let structure = commands[currentToken].structure;
+	if (structure.length <= commandChain.length) return undefined;
+	
+	let i = 0;
+	for (; i < commandChain.length; i++) {
+		let items = structure[i].items;
+		if (Array.isArray(items)){
+			if (!items.includes(commandChain[i])) return undefined;
+		} /*else if (typeof items == 'object') {
+			if (!items.hasOwnProperty(commandChain[i])) return undefined;
+		}*/ //not sure if needed...?
+	}
+	return structure[i];
 }
