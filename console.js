@@ -1,6 +1,6 @@
 'use strict';
 
-export {init, log, runApp, closeApp, enterCommand, focusPromptInput};
+export {init, log, runApp, closeApp, enterCommand, focusPromptInput, processPromptInput};
 
 import * as cmd from './commands.js';
 import * as ui from './ui-elements.js';
@@ -32,6 +32,7 @@ function init(){
 	commandPrompt.classList.add('posRelative');
 	commandPrompt.appendChild(promptLabel);
 	commandPrompt.appendChild(promptInput);
+	commandPrompt.appendChild(ui.createSubmitButton(1, 'span'));
 	consoleContainer.appendChild(commandPrompt);
 	
 	return consoleContainer;
@@ -95,7 +96,8 @@ function keyPressed(){
 	activeApp.keyPressed();
 }
 
-function processPromptInput(){
+function processPromptInput(){	
+	removeElementsByClass('webConsole-autoCompleteHelp');
 	let commandString = promptInput.value;
 	log(`> ${ commandString}`);
 	commandHistoryIndex = undefined;
@@ -168,9 +170,12 @@ function closeApp(targetElement){
 }
 
 function enterCommand({commandString, autoSubmit = false, clear = true, initialDelay = 0}){
+	removeElementsByClass('webConsole-autoCompleteHelp');
 	var delay = initialDelay;
 	if(clear) {
 		promptInput.value ='';
+	} else {
+		promptInput.value = promptInput.value.trimEnd() + ' ';
 	}
 	for (let c of commandString){
 		setTimeout(() => (promptInput.value += c), delay);
@@ -186,24 +191,15 @@ function enterCommand({commandString, autoSubmit = false, clear = true, initialD
 	
 	delay += 100;
 	setTimeout(displayAutoCompleteHelp, delay);
-	
-	// let command = cmd.commands[commandString];
-	// if(!autoSubmit && command != undefined && command.hasOwnProperty('options')){
-		// setTimeout(function(){
-			// contextMenu = ui.createOptionsMenu(command.options, autoSubmit);
-			// commandPrompt.appendChild(contextMenu);
-			// contextMenu.style.bottom = '0em';
-			// contextMenu.style.left = (promptInput.selectionStart + 1) + 'ch';
-		// }, delay);	
-	// }
+
 	focusPromptInput();
 }
 
 function displayAutoCompleteHelp(){
-	removeElementsByClass('webConsole-autoCompleteHelp')
+	removeElementsByClass('webConsole-autoCompleteHelp');
 	var options = cmd.nextOptions(promptInput.value);
 	if (options == undefined) return;
 	let element = ui.createAutoCompleteHelp(options);
 	commandPrompt.appendChild(element);
-	element.style.left = (promptInput.selectionStart + 2) + 'ch';
+	element.style.left = (promptInput.value.trimEnd().length + 2) + 'ch';
 }

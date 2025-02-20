@@ -201,16 +201,14 @@ function nextOptions(currentInput){
 	if (!commands.hasOwnProperty(currentToken)) return undefined;
 	
 	let structure = commands[currentToken].structure;
-	if (structure.length <= commandChain.length) return undefined;
+	if (structure.length < commandChain.length) return undefined;
 	
 	let i = 0;
 	for (; i < commandChain.length; i++) {
 		let items = structure[i].items;
 		if (Array.isArray(items)){
 			if (!items.includes(commandChain[i])) return undefined;
-		} /*else if (typeof items == 'object') {
-			if (!items.hasOwnProperty(commandChain[i])) return undefined;
-		}*/ //not sure if needed...?
+		} 
 	}
 	return structure[i];
 }

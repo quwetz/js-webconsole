@@ -1,7 +1,7 @@
 'use-strict';
 
-export {createConsoleLog, createCommandPrompt, show, hide, htmlFromString, createTextBox, createButton, createCommandButton, createOptionsMenu, createAutoCompleteHelp};
-import {enterCommand} from './console.js';
+export {createConsoleLog, createCommandPrompt, show, hide, htmlFromString, createTextBox, createButton, createCommandButton, createOptionsMenu, createAutoCompleteHelp, createSubmitButton};
+import {enterCommand, processPromptInput} from './console.js';
 
 function createConsoleLog(id = 'webConsole-consoleLog', cssClass = 'webConsole') {
 	var log = document.createElement('div');
@@ -10,11 +10,11 @@ function createConsoleLog(id = 'webConsole-consoleLog', cssClass = 'webConsole')
 	return log;
 }
 
-function createCommandPrompt(id = 'webConsole-commandPrompt', cssClass = 'webConsole') {
+function createCommandPrompt(id = 'webConsole-commandPrompt') {
 	var prompt = document.createElement('input');
 	prompt.type = 'text';
 	prompt.id = id;
-	prompt.classList.add(cssClass);
+	prompt.classList.add('webConsole-promptInput');
 	return prompt;
 }
 
@@ -36,10 +36,10 @@ function createOptionsMenu(options){
 	return menuElement;
 }
 
-function createSubmitButton(width){
-	let button = createCommandButton({commandString: '↵', autoSubmit: true, clear: false});
+function createSubmitButton(width = 1, wrapper = 'div'){
+	let button = createButton({text: String.fromCharCode('0x21B5'), action: processPromptInput});
 	button.style.width = width + '.5ch';
-	let div = document.createElement('div');
+	let div = document.createElement(wrapper);
 	div.appendChild(button);
 	return div;
 }
@@ -127,6 +127,7 @@ function createAutoCompleteHelp(options){
 	var label = document.createElement('div');
 	label.innerText = options.label;
 	label.classList.add('webConsole-autoCompleteHelp-label')
+	
 	wrapper.appendChild(label);
 
 	return wrapper;

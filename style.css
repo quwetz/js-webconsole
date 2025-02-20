@@ -30,6 +30,7 @@ body {
 .webConsole-button {
 	font-family: inherit;
 	font-size: inherit;
+	height: 1.1em;
 	padding-top: 0px;
 	padding-bottom: 0px;
 	border: 1px;
@@ -37,7 +38,11 @@ body {
 	margin: 1px;
 	background-color: var(--foreground-color);
 	color: var(--background-color);
-	opacity: 1.0;
+	opacity: inherit;
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .webConsole-floatingBanner {
@@ -57,14 +62,22 @@ body {
 	display: none;
 }
 
+.webConsole-promptInput {
+	width: 95%;
+	border: none;
+	outline: none;
+	font-family: var(--font);
+	font-size: var(--font-size);
+	background-color: var(--background-color);
+	color: var(--foreground-color);
+}
+
 .webConsole {
 	font-family: var(--font);
 	font-size: var(--font-size);
 	background-color: var(--background-color);
 	color: var(--foreground-color);
-	width: 90%;
-	border: none;
-	outline: none;
+	width: 800px;
 }
 
 .webConsole-snake {
@@ -73,30 +86,41 @@ body {
 
 .webConsole-autoCompleteHelp {
 	position: absolute;
-	height: fit-content;
-	width: fit-content;
+	height: 1em;
+	width: auto;
 	bottom: 1px;
 	border-width: 1px;
 	border-radius: 2px;
 	border-color: var(--foreground-color);
 	border-style: solid;
+	opacity: 0.5;
+	transition: opacity 0.25 ease;
 }
 
-.webConsole-optionsMenu-label {
-	opacity: 0.5;
+.webConsole-autoCompleteHelp-label {
+	
 }
 
 .webConsole-optionsMenu {
 	background-color: var(--background-color);
 	font-size: 0px;
 	line-height: 0em;
-	height: 0px;
+	height: 1em;
 	width: fit-content;
-	transition: height 0.25s ease,
-				font-size 0.25s ease,
+	transition: line-height 0.25s ease,
+				font-size 0.25s ease;
 }
 
-.webConsole-autoCompleteHelp:hover .webConsole-optionsMenu{
-	height: fit-content;
+.webConsole-autoCompleteHelp:hover {
+	opacity: 1.0;
+	border: none;
+}
+
+.webConsole-autoCompleteHelp:hover .webConsole-optionsMenu {
 	font-size: var(--font-size);
+	line-height: 1em;
+}
+
+.webConsole-autoCompleteHelp:hover .webConsole-autoCompleteHelp-label {
+	visibility: hidden;
 }
