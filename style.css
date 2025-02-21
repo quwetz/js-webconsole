@@ -84,6 +84,12 @@ body {
 	line-height: 1ch;
 }
 
+.webConsole-inputColor {
+	opacity: 0;
+	position: absolute;
+	height: 1.2em;
+}
+
 .webConsole-autoCompleteHelp {
 	position: absolute;
 	height: 1em;
@@ -95,10 +101,6 @@ body {
 	border-style: solid;
 	opacity: 0.5;
 	transition: opacity 0.25 ease;
-}
-
-.webConsole-autoCompleteHelp-label {
-	
 }
 
 .webConsole-optionsMenu {
@@ -121,6 +123,6 @@ body {
 	line-height: 1em;
 }
 
-.webConsole-autoCompleteHelp:hover .webConsole-autoCompleteHelp-label {
+.webConsole-autoCompleteHelp:hover .webConsole-optionsLabel {
 	visibility: hidden;
 }

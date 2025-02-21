@@ -120,13 +120,21 @@ function createAutoCompleteHelp(options){
 	wrapper.id = 'webConsole-autoCompleteHelp';
 	wrapper.classList.add('webConsole-autoCompleteHelp');
 
-	if(typeof options.items != 'string'){
-		let om = wrapper.appendChild(createOptionsMenu(options));
-	}
-
 	var label = document.createElement('div');
 	label.innerText = options.label;
-	label.classList.add('webConsole-autoCompleteHelp-label')
+
+	if(typeof options.items != 'string'){
+		let om = wrapper.appendChild(createOptionsMenu(options));
+		label.classList.add('webConsole-autoCompleteHelp-optionsLabel');
+	} else if (options.items == 'color'){
+		let colorPicker = document.createElement('input');
+		colorPicker.type = 'color';
+		colorPicker.classList.add('webConsole-inputColor');
+		wrapper.appendChild(colorPicker);
+	}
+
+	
+	
 	
 	wrapper.appendChild(label);
 
