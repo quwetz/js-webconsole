@@ -1,7 +1,7 @@
 'use-strict';
 
 export {createConsoleLog, createCommandPrompt, show, hide, htmlFromString, createTextBox, createButton, createCommandButton, createAutoCompleteHelp, createSubmitButton};
-import {enterCommand, processPromptInput} from './console.js';
+import {enterCommand, processPromptInput, setupPromptCursorForTextInput} from './console.js';
 
 function createConsoleLog(id = 'webConsole-consoleLog', cssClass = 'webConsole') {
 	var log = document.createElement('div');
@@ -105,27 +105,41 @@ function createAutoCompleteHelp(options){
 		switch (options.items) {
 			case 'color':
 				return createColorPicker();
+			case 'text':
+				return createTextLabel('text');
 		}		
 	}
 }
 
+function createTextLabel(text){
+	var label = document.createElement('div');
+	label.classList.add('webConsole-autoCompleteHelp');
+	label.innerText = text;
+	label.addEventListener('click', setupPromptCursorForTextInput);
+	return label;
+}
+
 function createColorPicker(){
 	var wrapper = document.createElement('div');
-	var label = document.createElement('span');
 	var input = document.createElement('input');
 	var labelText = 'color';
 	wrapper.classList.add('webConsole-autoCompleteHelp');
 	wrapper.style.width = (labelText.length + 0.2) + 'ch';
-	label.classList.add('webConsole-autoCompleteHelp-label');
-	label.innerText = labelText;
 	input.type = 'color';
 	input.classList.add('webConsole-autoCompleteHelp-colorPicker');
-	wrapper.appendChild(label);	
+	wrapper.appendChild(createAutoCompleteLabel(labelText));	
 	wrapper.appendChild(input);
 	input.addEventListener('change', function(){
 		enterCommand({commandString: this.value, clear: false, autoSubmit: false});
 		});
 	return wrapper;
+}
+
+function createAutoCompleteLabel(text){
+	var label = document.createElement('span');
+	label.classList.add('webConsole-autoCompleteHelp-label');
+	label.innerText = text;
+	return label;
 }
 
 function createOptionsDropDown(options){

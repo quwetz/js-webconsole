@@ -1,6 +1,6 @@
 'use strict';
 
-export {init, log, runApp, closeApp, enterCommand, focusPromptInput, processPromptInput};
+export {init, log, runApp, closeApp, enterCommand, focusPromptInput, processPromptInput, setupPromptCursorForTextInput};
 
 import * as cmd from './commands.js';
 import * as ui from './ui-elements.js';
@@ -15,7 +15,6 @@ var activeApp;
 var contextMenu;
 
 document.body.addEventListener('keydown', keyPressed);
-document.body.addEventListener('mouseup', mouseUp);
 
 function init(){
 	consoleContainer = document.createElement('div');
@@ -42,15 +41,6 @@ function focusPromptInput(){
 	promptInput.focus();
 }
 
-function mouseUp(){
-	// TODO: find out why the contextmenu gets removed before the buttons event handler is processed, if removeContextMenus is called directly. Usage of setTimeout() is just a workaround here...
-	setTimeout(removeContextMenus, 1);
-}
-
-function removeContextMenus(){
-	removeElementsByClass('webConsole-contextMenu');
-}
-
 function removeElementsByClass(className) {
     let elements = document.getElementsByClassName(className);
     while(elements.length > 0) {
@@ -60,7 +50,6 @@ function removeElementsByClass(className) {
 
 function keyPressed(){
 	if(activeApp == undefined){
-		removeContextMenus();
 		switch (event.key){			
 			case 'Enter':
 				processPromptInput();
@@ -97,7 +86,7 @@ function keyPressed(){
 }
 
 function processPromptInput(){	
-	removeElementsByClass('webConsole-autoCompleteHelp');
+	removeAutoCompleteHelp();
 	let commandString = promptInput.value;
 	log(`> ${ commandString}`);
 	commandHistoryIndex = undefined;
@@ -170,7 +159,7 @@ function closeApp(targetElement){
 }
 
 function enterCommand({commandString, autoSubmit = false, clear = true, initialDelay = 0}){
-	removeElementsByClass('webConsole-autoCompleteHelp');
+	removeAutoCompleteHelp();
 	var delay = initialDelay;
 	if(clear) {
 		promptInput.value ='';
@@ -196,10 +185,22 @@ function enterCommand({commandString, autoSubmit = false, clear = true, initialD
 }
 
 function displayAutoCompleteHelp(){
-	removeElementsByClass('webConsole-autoCompleteHelp');
+	removeAutoCompleteHelp();
 	var options = cmd.nextOptions(promptInput.value);
 	if (options == undefined) return;
 	let element = ui.createAutoCompleteHelp(options);
 	commandPrompt.appendChild(element);
 	element.style.left = (promptInput.value.trimEnd().length + 2) + 'ch';
+}
+
+function setupPromptCursorForTextInput(){
+	if (promptInput.value != ''){
+		promptInput.value = promptInput.value.trimEnd() + ' ';
+	}
+	focusPromptInput();
+	removeAutoCompleteHelp();
+}
+
+function removeAutoCompleteHelp(){
+	removeElementsByClass('webConsole-autoCompleteHelp');
 }

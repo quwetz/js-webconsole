@@ -27,6 +27,10 @@ body {
 	position: relative;
 }
 
+.posAbsolute {
+	position: absolute;
+}
+
 .webConsole-button {
 	font-family: inherit;
 	font-size: inherit;
@@ -112,7 +116,7 @@ option:disabled {
 }
 
 .webConsole-autoCompleteHelp-label {
-	position: absolute;
+	/* position: absolute; */
 	top: 0.1em;
 	left: 0.1ch;
 }
