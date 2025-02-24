@@ -84,45 +84,59 @@ body {
 	line-height: 1ch;
 }
 
-.webConsole-inputColor {
-	opacity: 0;
-	position: absolute;
-	height: 1.2em;
+
+
+option:focus {
+	border: none;
 }
 
-.webConsole-autoCompleteHelp {
+option {
+	background-color: var(--background-color); 
+	border-width: 0px;
+	border-color: var(--foreground-color);
+}
+
+option:disabled {
+	display:none;
+}
+
+.webConsole-autoCompleteHelp-colorPicker {
+	opacity: 0;
+	font-size: inherit;
 	position: absolute;
-	height: 1em;
-	width: auto;
-	bottom: 1px;
+	top: -0.1em;
+	height: 1.4em;
+	left: -0.2ch;
+	width: 6.1ch;
+	cursor: pointer;
+}
+
+.webConsole-autoCompleteHelp-label {
+	position: absolute;
+	top: 0.1em;
+	left: 0.1ch;
+}
+
+
+
+select.webConsole-autoCompleteHelp, .webConsole-autoCompleteHelp {
+	position: absolute;
+	font-family: inherit;
+	font-size: var(--font-size);
+	background: none;
 	border-width: 1px;
 	border-radius: 2px;
 	border-color: var(--foreground-color);
 	border-style: solid;
+	color: var(--foreground-color);
+	width: auto;
+	bottom: 0em;
 	opacity: 0.5;
-	transition: opacity 0.25 ease;
-}
-
-.webConsole-optionsMenu {
-	background-color: var(--background-color);
-	font-size: 0px;
-	line-height: 0em;
-	height: 1em;
-	width: fit-content;
-	transition: line-height 0.25s ease,
-				font-size 0.25s ease;
+	height: 1.2em;
+	transition: opacity 0.25s ease;
+	cursor: pointer;
 }
 
 .webConsole-autoCompleteHelp:hover {
 	opacity: 1.0;
-	border: none;
-}
-
-.webConsole-autoCompleteHelp:hover .webConsole-optionsMenu {
-	font-size: var(--font-size);
-	line-height: 1em;
-}
-
-.webConsole-autoCompleteHelp:hover .webConsole-optionsLabel {
-	visibility: hidden;
 }

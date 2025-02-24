@@ -1,6 +1,6 @@
 'use-strict';
 
-export {createConsoleLog, createCommandPrompt, show, hide, htmlFromString, createTextBox, createButton, createCommandButton, createOptionsMenu, createAutoCompleteHelp, createSubmitButton};
+export {createConsoleLog, createCommandPrompt, show, hide, htmlFromString, createTextBox, createButton, createCommandButton, createAutoCompleteHelp, createSubmitButton};
 import {enterCommand, processPromptInput} from './console.js';
 
 function createConsoleLog(id = 'webConsole-consoleLog', cssClass = 'webConsole') {
@@ -16,24 +16,6 @@ function createCommandPrompt(id = 'webConsole-commandPrompt') {
 	prompt.id = id;
 	prompt.classList.add('webConsole-promptInput');
 	return prompt;
-}
-
-function createOptionsMenu(options){
-	var menuElement = document.createElement('div');
-	var width = Math.max(...(options.items.map((s) => (s.length))));
-	menuElement.classList.add('webConsole-optionsMenu');
-	
-	for(let option of options.items){
-		let button = createCommandButton({commandString: option, autoSubmit: false, clear: false});
-		button.style.width = width + '.5ch';
-		let div = document.createElement('div');
-		div.appendChild(button);
-		menuElement.appendChild(div);
-	}
-	if (!options.mandatory){
-		menuElement.appendChild(createSubmitButton(width));
-	}
-	return menuElement;
 }
 
 function createSubmitButton(width = 1, wrapper = 'div'){
@@ -115,28 +97,55 @@ function htmlFromString({text: s, parentElement = 'div'}){
 	return e;
 }
 
+
 function createAutoCompleteHelp(options){
-	var wrapper = document.createElement('div');
-	wrapper.id = 'webConsole-autoCompleteHelp';
-	wrapper.classList.add('webConsole-autoCompleteHelp');
-
-	var label = document.createElement('div');
-	label.innerText = options.label;
-
 	if(typeof options.items != 'string'){
-		let om = wrapper.appendChild(createOptionsMenu(options));
-		label.classList.add('webConsole-autoCompleteHelp-optionsLabel');
-	} else if (options.items == 'color'){
-		let colorPicker = document.createElement('input');
-		colorPicker.type = 'color';
-		colorPicker.classList.add('webConsole-inputColor');
-		wrapper.appendChild(colorPicker);
+		return createOptionsDropDown(options);
+	} else {
+		switch (options.items) {
+			case 'color':
+				return createColorPicker();
+		}		
 	}
+}
 
-	
-	
-	
-	wrapper.appendChild(label);
-
+function createColorPicker(){
+	var wrapper = document.createElement('div');
+	var label = document.createElement('span');
+	var input = document.createElement('input');
+	var labelText = 'color';
+	wrapper.classList.add('webConsole-autoCompleteHelp');
+	wrapper.style.width = (labelText.length + 0.2) + 'ch';
+	label.classList.add('webConsole-autoCompleteHelp-label');
+	label.innerText = labelText;
+	input.type = 'color';
+	input.classList.add('webConsole-autoCompleteHelp-colorPicker');
+	wrapper.appendChild(label);	
+	wrapper.appendChild(input);
+	input.addEventListener('change', function(){
+		enterCommand({commandString: this.value, clear: false, autoSubmit: false});
+		});
 	return wrapper;
+}
+
+function createOptionsDropDown(options){
+	let select = document.createElement('select');
+	select.classList.add('webConsole-autoCompleteHelp');
+	let placeholder = document.createElement('option');
+	placeholder.value = '';
+	placeholder.innerText = options.label;
+	placeholder.setAttribute('disabled', '');
+	placeholder.setAttribute('selected', '');
+	select.appendChild(placeholder);
+	
+	for (let optionValue of options.items){
+		let optionElement = document.createElement('option');
+		optionElement.value = optionValue;
+		optionElement.innerText = optionValue;
+		select.appendChild(optionElement);
+	}
+	select.addEventListener('change', function(){
+		enterCommand({commandString: this.value, clear: false, autoSubmit: false});
+		});
+	return select;
 }
