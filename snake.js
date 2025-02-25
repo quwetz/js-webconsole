@@ -111,7 +111,7 @@ function newGame(targetElement, close_cb, params){
 		do {
 			appleX = randInt(0, width);
 			appleY = randInt(0, height);
-		} while (field[appleY][appleY].tile != tiles.empty);
+		} while (field[appleY][appleX].tile != tiles.empty);
 		field[appleY][appleX].setTile(tiles.apple);
 	}
 
@@ -141,7 +141,9 @@ function newGame(targetElement, close_cb, params){
 			case 'ArrowDown':
 			case 'ArrowRight':
 			case 'ArrowLeft':
-				inputQueue.push(event.key);
+				if(inputQueue[inputQueue.length-1] != event.key) {
+					inputQueue.push(event.key);
+				}
 				break;
 		}
 	}

@@ -107,6 +107,8 @@ function createAutoCompleteHelp(options){
 				return createColorPicker();
 			case 'text':
 				return createTextLabel('text');
+			case 'size':
+				return createTextLabel('size');
 		}		
 	}
 }

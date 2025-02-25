@@ -4,7 +4,7 @@
 	--foreground-color: lime;
 	--alert-color: red;
 	--font-size: 18px;
-	--font: courier;
+	--font: 'courier new', courier, monospace;
 }
 
 body {
@@ -12,11 +12,6 @@ body {
 	font-size: var(--font-size);
 	color: var(--foreground-color);
 	line-height: 1em;
-}
-
-#console {
-	width: 99%;
-	margin: auto;
 }
 
 .alert {
@@ -29,6 +24,10 @@ body {
 
 .posAbsolute {
 	position: absolute;
+}
+
+.webConsole-promptSubmitButton {
+	float: right;
 }
 
 .webConsole-button {
@@ -67,11 +66,11 @@ body {
 }
 
 .webConsole-promptInput {
-	width: 95%;
+	width: 80%;
 	border: none;
 	outline: none;
+	font-size: inherit;
 	font-family: var(--font);
-	font-size: var(--font-size);
 	background-color: var(--background-color);
 	color: var(--foreground-color);
 }
@@ -81,7 +80,7 @@ body {
 	font-size: var(--font-size);
 	background-color: var(--background-color);
 	color: var(--foreground-color);
-	width: 800px;
+	width: 100%;
 }
 
 .webConsole-snake {

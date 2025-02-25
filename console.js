@@ -31,7 +31,7 @@ function init(){
 	commandPrompt.classList.add('posRelative');
 	commandPrompt.appendChild(promptLabel);
 	commandPrompt.appendChild(promptInput);
-	commandPrompt.appendChild(ui.createSubmitButton(1, 'span'));
+	commandPrompt.appendChild(ui.createSubmitButton(1, 'span')).classList.add('webConsole-promptSubmitButton');
 	consoleContainer.appendChild(commandPrompt);
 	
 	return consoleContainer;
@@ -99,7 +99,7 @@ function processPromptInput(){
 }
 
 function parseCommand(commandString){
-	var parts = commandString.split(' ');
+	var parts = commandString.trim().split(' ');
 	var command = parts.shift();
 	if(Object.keys(cmd.commands).includes(command)){
 		cmd.commands[command].execute(parts);

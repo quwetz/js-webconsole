@@ -4,6 +4,7 @@ import {log, runApp, enterCommand} from './console.js';
 import {newGame as startSnake} from './snake.js';
 import * as ui from './ui-elements.js';
 import {createCommandButton as cmdBtn} from './ui-elements.js';
+import {unimage} from './unimage.js';
 
 export {commands, nextOptions};
 
@@ -70,6 +71,13 @@ const commands = {
 		noAdditionalParameters: false,
 		structure: [{label: 'size', items: 'size', mandatory: true}],
 	},
+	img: {
+		execute: loadImage,
+		description: 'Loads a local image and converts it to a utf8 text image (locally)',
+		info: ui.htmlFromString({text: 'Usage: <i>img</i>'}),
+		noAdditionalParameters: true,
+		structure: [],
+	}
 };
 
 commands.help.options = Object.keys(commands);
@@ -99,6 +107,38 @@ function help(params){
 function home(){
 	log('Hello and welcome to my Website!');
 	log(['Enter or click ', cmdBtn({commandString: 'help', autoSubmit: true}), ' for a list of available commands']);
+}
+
+function loadImage(){
+	var input = document.createElement('input');
+	input.type = 'file';
+	input.id = 'image_upload';
+	input.accept = '.jpg, .jpeg, .png';
+	input.addEventListener('change', function(event){
+			renderImage(event.target.files[0]);
+			event.target.remove();
+		});
+	input.addEventListener('cancel', function(event){
+			log('no image chosen');
+			event.target.remove();
+		});
+	input.classList.add('webConsole-doNotDisplay');
+	document.body.appendChild(input);
+	input.click();
+}
+
+async function renderImage(file){
+	var img = new unimage(file);
+	// TODO: Find a clean way to wait until the image has loaded...
+	await sleep(1000);
+	let div = ui.htmlFromString({text: img.binaryString});
+	div.classList.add('webConsole-snake');
+	log(div);
+	console.log(img.binaryString);	
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 function setFontSize(params){
@@ -142,7 +182,7 @@ function listGames(){
 		text: e, 
 		action: enterCommand,
 		actionParameter: {
-			commandString: 'startgame ' + e, 
+			commandString: 'start ' + e, 
 			autoSubmit: true, 
 			clear: true, 
 			initialDelay: 400
