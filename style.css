@@ -4,7 +4,7 @@
 	--foreground-color: lime;
 	--alert-color: red;
 	--font-size: 18px;
-	--font: 'courier new', courier, monospace;
+	--font: 'Courier New', Courier, 'Lucida Sans Typewriter', 'Lucida Typewriter', monospace;
 }
 
 body {
@@ -115,7 +115,6 @@ option:disabled {
 }
 
 .webConsole-autoCompleteHelp-label {
-	/* position: absolute; */
 	top: 0.1em;
 	left: 0.1ch;
 }

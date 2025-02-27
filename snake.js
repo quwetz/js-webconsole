@@ -70,6 +70,8 @@ function newGame(targetElement, close_cb, params){
 	
 	
 	function initField(){
+		disableScrolling();
+		
 		displayElement.innerHTML = '';
 		var f = [...Array(height)].map(e => Array(width));
 		displayElement.appendChild(document.createTextNode('╔' + '═'.repeat(width) + '╗'));
@@ -121,7 +123,19 @@ function newGame(targetElement, close_cb, params){
 	
 	function quit(){
 		console.log('quit called');
+		enableScrolling();
 		closeFunction(targetElement);
+	}
+	
+	function disableScrolling(){
+		document.body.style.position = 'fixed';
+		document.body.style.overflowY = 'scroll';
+	}
+	
+	function enableScrolling(){
+		document.body.style.position = '';
+		document.body.style.overflowY = '';
+
 	}
 	
 	function keyPressed(){
