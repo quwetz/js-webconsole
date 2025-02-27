@@ -1,10 +1,18 @@
+@font-face {
+  font-family: 'Fira Code';
+  src: url('woff2/FiraCode-Regular.woff2') format('woff2'),
+    url("woff/FiraCode-Regular.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+}
+
 
 :root{
 	--background-color: black;
 	--foreground-color: lime;
 	--alert-color: red;
 	--font-size: 18px;
-	--font: 'Courier New', Courier, 'Lucida Sans Typewriter', 'Lucida Typewriter', monospace;
+	--font: 'Fira Code', 'Courier New', monospace;
 }
 
 body {
@@ -84,7 +92,12 @@ body {
 }
 
 .webConsole-snake {
-	line-height: 1ch;
+
+}
+
+.webConsole-scaleToSquare {
+	transform-origin: top center;
+	transform: scaleY(0.6);
 }
 
 

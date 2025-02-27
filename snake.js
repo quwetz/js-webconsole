@@ -11,8 +11,8 @@ function newGame(targetElement, close_cb, params){
 	
 	var width = 32;
 	var height = 16;
-	displayElement.style.width = (width + 2) + 'ch';
-	displayElement.style.height = (height + 4) + 'ch';
+	// displayElement.style.width = (width + 2) + 'ch';
+	// displayElement.style.height = (height + 4) + 'em';
 	
 	var playerX = 0;
 	var playerY = 0;
@@ -28,7 +28,7 @@ function newGame(targetElement, close_cb, params){
 		empty: '&nbsp;',
 		tail: '#',
 		head: '#',
-		apple: '֍',
+		apple: '¤',
 	}
 	
 	var pauseTextBox = ui.createTextBox('Game paused');
@@ -84,11 +84,17 @@ function newGame(targetElement, close_cb, params){
 		
 		displayElement.appendChild(document.createTextNode('╠' + '═'.repeat(width) + '╣'));
 		displayElement.appendChild(document.createElement('br'));
+		
+		let gameAreaContainer = document.createElement('div');
+		gameAreaContainer.classList.add('webConsole-scaleToSquare');
+		gameAreaContainer.style.height = height + 'ch';
+		displayElement.appendChild(gameAreaContainer);
+		
 		for(let y = 0; y < height; y++){
-			displayElement.appendChild(document.createTextNode('║'));
+			gameAreaContainer.appendChild(document.createTextNode('║'));
 			for(let x = 0; x < width; x++){
 				f[y][x] = {
-					elem: displayElement.appendChild(document.createElement('span')),
+					elem: gameAreaContainer.appendChild(document.createElement('span')),
 					tile: tiles.empty,
 					setTile: function(t){
 						this.tile = t; 
@@ -99,8 +105,8 @@ function newGame(targetElement, close_cb, params){
 				f[y][x].setTile(f[y][x].tile);
 				f[y][x].elem.id=(`tile ${ x},${ y}`);
 			}
-			displayElement.appendChild(document.createTextNode('║'));
-			displayElement.appendChild(document.createElement('br'));
+			gameAreaContainer.appendChild(document.createTextNode('║'));
+			gameAreaContainer.appendChild(document.createElement('br'));
 		}
 		displayElement.appendChild(document.createTextNode('╚' + '═'.repeat(width) + '╝'));
 		displayElement.appendChild(document.createElement('br'));
