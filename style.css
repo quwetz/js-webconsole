@@ -13,8 +13,12 @@
 	--background-color: black;
 	--foreground-color: lime;
 	--alert-color: red;
-	--font-size: 18px;
+	--font-size: clamp(6px, 4.5vw, 20px);
 	--font: 'Fira Code', 'Courier New', monospace;
+}
+
+html {
+    overscroll-behavior: none;
 }
 
 
@@ -22,7 +26,7 @@ body {
 	background-color: var(--background-color);
 	font-size: var(--font-size);
 	color: var(--foreground-color);
-	line-height: 1em;
+	line-height: 1em;x
 }
 
 .alert {
