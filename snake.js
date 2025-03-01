@@ -1,8 +1,15 @@
 export {newGame};
 import * as ui from './ui-elements.js';
+import * as gestures from './gestures.js';
 
 function newGame(targetElement, close_cb, params){
-	
+	var touch = gestures.init(window);
+    touch.subscribe('strokeRight', () => (inputQueue.push('ArrowRight')));
+    touch.subscribe('strokeDown', () => (inputQueue.push('ArrowDown')));
+    touch.subscribe('strokeLeft', () => (inputQueue.push('ArrowLeft')));
+    touch.subscribe('strokeUp', () => (inputQueue.push('ArrowUp')));    
+    
+    
 	var displayElement = targetElement;
 	displayElement.classList.add('posRelative');
 	displayElement.classList.add('webConsole-snake');
