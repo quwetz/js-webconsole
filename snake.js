@@ -143,12 +143,13 @@ function newGame(targetElement, close_cb, params){
 	function disableScrolling(){
 		document.body.style.position = 'fixed';
 		document.body.style.overflowY = 'scroll';
+		document.documentElement.style.overscrollBehavior = 'none';
 	}
 	
 	function enableScrolling(){
 		document.body.style.position = '';
 		document.body.style.overflowY = '';
-
+		document.documentElement.style.overscrollBehavior = 'auto';
 	}
 	
 	function keyPressed(){
