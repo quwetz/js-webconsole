@@ -1,6 +1,6 @@
 'use-strict';
 
-export {createConsoleLog, createCommandPrompt, show, hide, htmlFromString, createTextBox, createButton, createCommandButton, createAutoCompleteHelp, createSubmitButton};
+export {createConsoleLog, createCommandPrompt, show, hide, htmlFromString, createTextBox, createButton, createCommandButton, createAutoCompleteHelp, createSubmitButton, centerString};
 import {enterCommand, processPromptInput, setupPromptCursorForTextInput} from './console.js';
 
 function createConsoleLog(id = 'webConsole-consoleLog', cssClass = 'webConsole') {

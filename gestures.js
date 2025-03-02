@@ -33,14 +33,12 @@ function init(el){
         gestures[gesture].splice(index, 1);
     }
     function handleStart(evt) {
-        evt.preventDefault();
         const touches = evt.changedTouches;
         for(let i = 0; i < touches.length; i++){
             ongoingTouches.set(touches[i].identifier, {x: touches[i].screenX, y: touches[i].screenY,});
         }
     }
     function handleEnd(evt) {
-        evt.preventDefault();
         const touches = evt.changedTouches;
         for(let i = 0; i < touches.length; i++){
             const id = touches[i].identifier;
@@ -53,7 +51,6 @@ function init(el){
         }
     } 
     function handleCancel(evt) {
-        evt.preventDefault();
         const touches = evt.changedTouches;
         for(let i = 0; i < touches.length; i++){
             const id = touches[i].identifier;
@@ -61,7 +58,6 @@ function init(el){
         }        
     }
     function handleMove(evt) {
-        evt.preventDefault();
     }
     
     function detectStroke(angle){

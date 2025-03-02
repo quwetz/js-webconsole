@@ -26,6 +26,11 @@ body {
 	line-height: 1em;x
 }
 
+.webConsole-pre {
+    font-family: inherit;
+    display: inline;
+}
+
 .alert {
 	color: var(--alert-color);
 }
