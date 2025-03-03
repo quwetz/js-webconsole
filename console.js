@@ -4,6 +4,7 @@ export {init, log, runApp, closeApp, enterCommand, focusPromptInput, processProm
 
 import * as cmd from './commands.js';
 import * as ui from './ui-elements.js';
+import * as util from './util.js';
 
 // DOM Elements
 var consoleContainer, logContainer, commandPrompt, promptInput;
@@ -87,7 +88,7 @@ function keyPressed(){
 
 function processPromptInput(){	
 	removeAutoCompleteHelp();
-	let commandString = promptInput.value;
+	let commandString = promptInput.value.trim();
 	log(`> ${ commandString}`);
 	commandHistoryIndex = undefined;
 	if(commandString === ''){
@@ -99,10 +100,9 @@ function processPromptInput(){
 }
 
 function parseCommand(commandString){
-	var parts = commandString.trim().split(' ');
-	var command = parts.shift();
+	var [command, rest] = util.splitAtFirstSpace(commandString);
 	if(Object.keys(cmd.commands).includes(command)){
-		cmd.commands[command].execute(parts);
+		cmd.commands[command].execute(rest);
 	} else {
 		log('Unknown command: ' + command);
 	}			

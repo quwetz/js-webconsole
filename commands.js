@@ -5,6 +5,7 @@ import {newGame as startSnake} from './snake.js';
 import * as ui from './ui-elements.js';
 import {createCommandButton as cmdBtn} from './ui-elements.js';
 import {unimage} from './unimage.js';
+import * as util from './util.js';
 
 export {commands, nextOptions};
 
@@ -84,11 +85,11 @@ commands.help.options = Object.keys(commands);
 commands.help.structure[0].items = Object.keys(commands);
 
 function echo(params){
-	log(params.join(' '));
+	log(params);
 }
 
 function help(params){
-	if (params[0] == undefined){
+	if (params == ''){
 		log('Available Commands:');
 		Object.keys(commands).forEach((e) => log([cmdBtn({commandString: e, autoSubmit: commands[e].noAdditionalParameters}), ` - ${ commands[e].description}`]));
 		log('');
@@ -96,12 +97,12 @@ function help(params){
 		log(ui.htmlFromString({text: 'For detailed information use <i>help [command]</i>'}));
 		return;
 	}
-	if(Object.keys(commands).includes(params[0])){
-		log(`Description: ${ commands[params[0]].description}`);
-		log(commands[params[0]].info);
+	if(Object.keys(commands).includes(params)){
+		log(`Description: ${ commands[params].description}`);
+		log(commands[params].info);
 		return;
 	}
-	log('Unknown command: ' + params[0]);
+	log('Unknown command: ' + params);
 }
 
 function home(){
@@ -143,38 +144,37 @@ function sleep(ms) {
 }
 
 function setFontSize(params){
-	var sizeString = params.join(' ');
-	let num = parseInt(sizeString);
+	let num = parseInt(params);
 	if(num <= 0){
 		log('The font size has to be bigger than 0');
 		return;
 	}
-	if(CSS.supports('font-size', sizeString)){
-		document.documentElement.style.setProperty('--font-size', sizeString);
-		log('Font size changed to ' + sizeString);
+	if(CSS.supports('font-size', params)){
+		document.documentElement.style.setProperty('--font-size', params);
+		log('Font size changed to ' + params);
 	} else {
-		if (!isNaN(sizeString)){
-			sizeString = num + 'px';
-			document.documentElement.style.setProperty('--font-size', sizeString);
-			log('Font size changed to ' + sizeString);
+		if (!isNaN(params)){
+			params = num + 'px';
+			document.documentElement.style.setProperty('--font-size', params);
+			log('Font size changed to ' + params);
 		} else {
-			log(params.join(' ') + ' is not a supported CSS font size');
+			log(params + ' is not a supported CSS font size');
 		}
 	}
 }
 
 function startGame(params){
-	if(params[0] == undefined){
+	if(params == undefined){
 		log('Missing parameter. Which game should be run?')
 		listGames();
 		return;
 	}
-	if(Object.keys(games).includes(params[0])){
-		var game = params.shift();
-		runApp(games[game].newGame, params);
+	var [game, gameParams] = util.splitAtFirstSpace(params);
+	if(Object.keys(games).includes(game)){
+		runApp(games[game].newGame, gameParams);
 		return;
 	}
-	log('Unknown game: ' + params[0]);
+	log('Unknown game: ' + game);
 }
 
 function listGames(){
@@ -192,12 +192,11 @@ function listGames(){
 }
 
 function handleColorChange(params){
-	var colorIdentifier = params.shift();
+	var [colorIdentifier, color] = util.splitAtFirstSpace(params);
 	if(colorIdentifiers.includes(colorIdentifier)){
 		let cssVariable = `--${ colorIdentifier}-color`;
-		let colorString = params.join(' ');
-		if(changeColor(cssVariable, colorString)) {
-			log(`${ colorIdentifier} color changed to ${ colorString}`);
+		if(changeColor(cssVariable, color)) {
+			log(`${ colorIdentifier} color changed to ${ color}`);
 		}
 		return;
 	}
