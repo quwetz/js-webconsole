@@ -6,6 +6,7 @@ import * as ui from './ui-elements.js';
 import {createCommandButton as cmdBtn} from './ui-elements.js';
 import {unimage} from './unimage.js';
 import * as util from './util.js';
+import {cv} from './cv.js';
 
 export {commands, nextOptions};
 
@@ -78,7 +79,14 @@ const commands = {
 		info: ui.htmlFromString({text: 'Usage: <i>img</i>'}),
 		noAdditionalParameters: true,
 		structure: [],
-	}
+	},
+	cv: {
+		execute: () => (log(cv)),
+		description: 'Display my curriculum vitae',
+		info: ui.htmlFromString({text: 'Usage: <i>cv</i>'}),
+		noAdditionalParameters: true,
+		structure: [],
+	},
 };
 
 commands.help.options = Object.keys(commands);

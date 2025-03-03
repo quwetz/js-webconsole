@@ -1,5 +1,4 @@
 Colorthemes
 configurations lokal speichern
-commandparsing refaktorisieren, sodass immer nur der erste token abgetrennt wird, damit zb bei echo whitespace erhalten bleibt
 targetresolution als parameter für img
 img kontrast erhöhen (option festlegen)
