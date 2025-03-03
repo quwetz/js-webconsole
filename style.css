@@ -1,3 +1,5 @@
+
+
 @font-face {
   font-family: 'Fira Code';
   src: url('font/woff2/FiraCode-Regular.woff2') format('woff2'),
@@ -11,15 +13,22 @@
 	--background-color: black;
 	--foreground-color: lime;
 	--alert-color: red;
-	--font-size: 18px;
+	--font-size: clamp(6px, 4.5vw, 20px);
 	--font: 'Fira Code', 'Courier New', monospace;
 }
+
+
 
 body {
 	background-color: var(--background-color);
 	font-size: var(--font-size);
 	color: var(--foreground-color);
-	line-height: 1em;
+	line-height: 1em;x
+}
+
+.webConsole-pre {
+    font-family: inherit;
+    display: inline;
 }
 
 .alert {

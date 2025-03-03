@@ -1,8 +1,15 @@
 export {newGame};
 import * as ui from './ui-elements.js';
+import * as gestures from './gestures.js';
 
 function newGame(targetElement, close_cb, params){
-	
+	var touch = gestures.init(window);
+    touch.subscribe('strokeRight', () => (inputQueue.push('ArrowRight')));
+    touch.subscribe('strokeDown', () => (inputQueue.push('ArrowDown')));
+    touch.subscribe('strokeLeft', () => (inputQueue.push('ArrowLeft')));
+    touch.subscribe('strokeUp', () => (inputQueue.push('ArrowUp')));    
+    
+    
 	var displayElement = targetElement;
 	displayElement.classList.add('posRelative');
 	displayElement.classList.add('webConsole-snake');
@@ -11,8 +18,6 @@ function newGame(targetElement, close_cb, params){
 	
 	var width = 32;
 	var height = 16;
-	// displayElement.style.width = (width + 2) + 'ch';
-	// displayElement.style.height = (height + 4) + 'em';
 	
 	var playerX = 0;
 	var playerY = 0;
@@ -35,23 +40,32 @@ function newGame(targetElement, close_cb, params){
 	ui.hide(pauseTextBox);
 	
 	var score = (function(){
-		const blankFillElement = document.createElement('span');
-		const scoreTextElement = document.createElement('span');
+		const element = document.createElement('span');
+		const text = document.createElement('pre');
+		text.classList.add('webConsole-pre');
+		
+		const backButton = ui.createButton({text: '<-', action: quit});
+	    backButton.classList.add('posAbsolute');
+	    backButton.style = 'top: 0.85em';
+	    element.appendChild(backButton);
+        element.appendChild(text);
+	    
 		var points = 0;
 		increase(0);
 		
 		return {
 			points,
-			blankFillElement,
-			scoreTextElement,
+			element,
 			increase,
 			};
 		
 		function increase(increment){
 				points += increment;
-				let label = 'Snake';
-				blankFillElement.innerHTML = label + '&nbsp;'.repeat(width - points.toString().length - label.length);
-				scoreTextElement.innerText = points;
+				let n_digits = points.toString().length;
+				let label = 'snake';
+				let str = label.padStart((width + label.length) / 2, ' ').padEnd(width, ' '); 
+				str = str.substring(0, str.length - n_digits) + points;
+				text.innerText = str;
 		}
 	})();
 	
@@ -72,13 +86,11 @@ function newGame(targetElement, close_cb, params){
 	function initField(){
 		disableScrolling();
 		
-		displayElement.innerHTML = '';
 		var f = [...Array(height)].map(e => Array(width));
 		displayElement.appendChild(document.createTextNode('╔' + '═'.repeat(width) + '╗'));
 		displayElement.appendChild(document.createElement('br'));
-		displayElement.appendChild(document.createTextNode('║'));
-		displayElement.appendChild(score.blankFillElement);
-		displayElement.appendChild(score.scoreTextElement);
+		displayElement.appendChild(document.createTextNode('║'));		
+		displayElement.appendChild(score.element);
 		displayElement.appendChild(document.createTextNode('║'));
 		displayElement.appendChild(document.createElement('br'));
 		
@@ -112,6 +124,7 @@ function newGame(targetElement, close_cb, params){
 		displayElement.appendChild(document.createElement('br'));
 		displayElement.appendChild(pauseTextBox);
 		pauseTextBox.classList.add('webConsole-floatingBanner');
+		
 		return f;
 	}
 
@@ -136,12 +149,13 @@ function newGame(targetElement, close_cb, params){
 	function disableScrolling(){
 		document.body.style.position = 'fixed';
 		document.body.style.overflowY = 'scroll';
+		document.documentElement.style.overscrollBehavior = 'none';
 	}
 	
 	function enableScrolling(){
 		document.body.style.position = '';
 		document.body.style.overflowY = '';
-
+		document.documentElement.style.overscrollBehavior = 'auto';
 	}
 	
 	function keyPressed(){
