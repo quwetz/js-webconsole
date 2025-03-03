@@ -8,7 +8,7 @@ import {unimage} from './unimage.js';
 import * as util from './util.js';
 import {cv} from './cv.js';
 
-export {commands, nextOptions};
+export {commands, nextParameter};
 
 const games = {
 	snake: {
@@ -32,7 +32,6 @@ const commands = {
 		description: 'Provides Information about commands', 
 		info: ui.htmlFromString({text: 'Usage: <i>help [command]</i><br>Examples: <i>help fgcolor</i>'}),
 		noAdditionalParameters: false,
-		options: undefined, //set after initialisation
 		structure: [{label: 'command', items: undefined, mandatory: false}],
 		},
 		
@@ -48,7 +47,6 @@ const commands = {
 		description: 'Changes the specified color',
 		info: ui.htmlFromString({text: 'Usage: <i>setcolor (identifier) (css-colorvalue)</i><br>Examples: <i>setcolor background white</i>, <i>setcolor foreground #F112FA</i>, <i>setcolor alert rgb(0,255,255)</i><br>Valid identifiers: ' + colorIdentifiers.join(', ')}),
 		noAdditionalParameters: false,
-		options: colorIdentifiers,
 		structure: [{label: 'identifier', items: colorIdentifiers, mandatory: true}, {label: 'color', items: 'color', mandatory: true}],
 	},
 	start: {
@@ -56,7 +54,6 @@ const commands = {
 		description: 'Runs a game in the console',
 		info: ui.htmlFromString({text: 'Usage: <i>startgame (game_name) [parameters]...</i><br>Example: <i>startgame snake</i><br>Use <i>games</i> to list available games'}),
 		noAdditionalParameters: false,
-		options: Object.keys(games),
 		structure: [{label: 'game', items: Object.keys(games), mandatory: true}],
 	},
 	listgames: {
@@ -82,14 +79,13 @@ const commands = {
 	},
 	cv: {
 		execute: () => (log(cv)),
-		description: 'Display my curriculum vitae',
+		description: 'Displays my curriculum vitae',
 		info: ui.htmlFromString({text: 'Usage: <i>cv</i>'}),
 		noAdditionalParameters: true,
 		structure: [],
 	},
 };
 
-commands.help.options = Object.keys(commands);
 commands.help.structure[0].items = Object.keys(commands);
 
 function echo(params){
@@ -118,8 +114,9 @@ function home(){
 	log(['Enter or click ', cmdBtn({commandString: 'help', autoSubmit: true}), ' for a list of available commands']);
 }
 
-function loadImage(){
+function loadImage(params){
 	var input = document.createElement('input');
+	
 	input.type = 'file';
 	input.id = 'image_upload';
 	input.accept = '.jpg, .jpeg, .png';
@@ -137,7 +134,7 @@ function loadImage(){
 }
 
 function renderImage(file){
-	var img = new unimage({file, init_cb: logImg});
+	var img = new unimage({file, width: 64, init_cb: logImg});
 	
 	function logImg() {
 	    let div = ui.htmlFromString({text: img.monochromeString, parentElement: 'div'});
@@ -239,11 +236,11 @@ function logColorConversionError(){
 }
 
 
-/**	Goes through currentInput and the commands chain and returns the next possible options.
-/*	Returns undefined if there are no options for the currentInput. (Either the input is not a valid command or there are no more options)
+/**	Goes through currentInput and the commands chain and returns the next possible parameter.
+/*	Returns undefined if there are no parameters for the currentInput. (Either the input is not a valid command or there are no more parameters)
 /*
 */
-function nextOptions(currentInput){
+function nextParameter(currentInput){
 	var commandChain = currentInput.trim().split(' ').filter((s) => (s != ''));
 	if (commandChain.length == 0) return undefined;
 	let currentToken = commandChain.shift();

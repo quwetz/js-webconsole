@@ -186,9 +186,9 @@ function enterCommand({commandString, autoSubmit = false, clear = true, initialD
 
 function displayAutoCompleteHelp(){
 	removeAutoCompleteHelp();
-	var options = cmd.nextOptions(promptInput.value);
-	if (options == undefined) return;
-	let element = ui.createAutoCompleteHelp(options);
+	var param = cmd.nextParameter(promptInput.value);
+	if (param == undefined) return;
+	let element = ui.createAutoCompleteHelp(param);
 	commandPrompt.appendChild(element);
 	element.style.left = (promptInput.value.trimEnd().length + 2) + 'ch';
 }

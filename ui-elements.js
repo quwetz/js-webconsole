@@ -98,11 +98,11 @@ function htmlFromString({text: s, parentElement = 'div'}){
 }
 
 
-function createAutoCompleteHelp(options){
-	if(typeof options.items != 'string'){
-		return createOptionsDropDown(options);
+function createAutoCompleteHelp(param){
+	if(typeof param.items != 'string'){
+		return createParameterDropDown(param);
 	} else {
-		switch (options.items) {
+		switch (param.items) {
 			case 'color':
 				return createColorPicker();
 			case 'text':
@@ -144,17 +144,17 @@ function createAutoCompleteLabel(text){
 	return label;
 }
 
-function createOptionsDropDown(options){
+function createParameterDropDown(param){
 	let select = document.createElement('select');
 	select.classList.add('webConsole-autoCompleteHelp');
 	let placeholder = document.createElement('option');
 	placeholder.value = '';
-	placeholder.innerText = options.label;
+	placeholder.innerText = param.label;
 	placeholder.setAttribute('disabled', '');
 	placeholder.setAttribute('selected', '');
 	select.appendChild(placeholder);
 	
-	for (let optionValue of options.items){
+	for (let optionValue of param.items){
 		let optionElement = document.createElement('option');
 		optionElement.value = optionValue;
 		optionElement.innerText = optionValue;
