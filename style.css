@@ -14,9 +14,10 @@
 
 
 :root{
-	--background-color: black;
+	--background-color: #131313;
 	--foreground-color: lime;
 	--alert-color: red;
+	--link-color: deepskyblue;
 	--font-size: clamp(6px, 4.5vw, 20px);
 	--font: 'Fira Code', 'Courier New', monospace;
 }
@@ -28,6 +29,10 @@ body {
 	font-size: var(--font-size);
 	color: var(--foreground-color);
 	line-height: 1em;
+}
+
+a {
+    color: var(--link-color);
 }
 
 .webConsole-pre {
@@ -103,6 +108,7 @@ body {
 	color: var(--foreground-color);
 	width: 100%;
 	white-space: pre;
+	text-wrap: wrap;
 }
 
 .webConsole-snake {

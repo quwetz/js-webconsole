@@ -17,7 +17,7 @@ const games = {
 	},
 }
 
-const colorIdentifiers = ['foreground', 'background', 'alert'];
+const colorIdentifiers = ['foreground', 'background', 'link', 'alert'];
 
 const commands = {
 	home: {
@@ -110,8 +110,11 @@ function help(params){
 }
 
 function home(){
-	log('Hello and welcome to my Website!');
+	log('Hello and welcome!');
+	log('This website uses a command line interface, this is not a chatbot.');
+	log('To browse this site, just enter a command or click a button.');
 	log(['Enter or click ', cmdBtn({commandString: 'help', autoSubmit: true}), ' for a list of available commands']);
+	log(['The code used for this UI is open source and available at ', ui.htmlFromString({text: '<a href="https://github.com/quwetz/js-webconsole">github.com/quwetz/js-webconsole</a>', container: 'span'})]);
 }
 
 function loadImage(params){
@@ -138,7 +141,7 @@ function renderImage(file){
 	log(`Loading ${ file.name}...`);
 	
 	function logImg() {
-	    let div = ui.htmlFromString({text: img.monochromeString, parentElement: 'div'});
+	    let div = ui.htmlFromString({text: img.monochromeString, container: 'div'});
         div.classList.add('webConsole-img');
         div.style.fontSize = (16 / img.canvas.width) * 100 + '%';
         div.style.lineHeight = '1';

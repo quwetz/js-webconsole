@@ -91,8 +91,8 @@ function show(uiElement) {
 	}
 }
 
-function htmlFromString({text: s, parentElement = 'div'}){
-	var e = document.createElement(parentElement);
+function htmlFromString({text: s, container = 'div'}){
+	var e = document.createElement(container);
 	e.innerHTML = s;
 	return e;
 }
