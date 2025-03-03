@@ -1,4 +1,4 @@
 Colorthemes
 configurations lokal speichern
-commanparsing refaktorisieren, sodass immer nur der erste token abgetrennt wird, damit zb bei echo whitespace erhalten bleibt
-touch steuerung für snake
+commandparsing refaktorisieren, sodass immer nur der erste token abgetrennt wird, damit zb bei echo whitespace erhalten bleibt
+targetresolution als parameter für img

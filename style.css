@@ -8,6 +8,11 @@
   font-style: normal;
 }
 
+.webConsole-img {
+	padding: 5px;
+	white-space: pre;
+}
+
 
 :root{
 	--background-color: black;
@@ -23,7 +28,7 @@ body {
 	background-color: var(--background-color);
 	font-size: var(--font-size);
 	color: var(--foreground-color);
-	line-height: 1em;x
+	line-height: 1em;
 }
 
 .webConsole-pre {

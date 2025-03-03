@@ -11,6 +11,7 @@ class unimage {
 	monochrome;
 	binary;
 	
+	monochromeString = '';
 	binaryString = '';
 	
 	binaryThreshold = 128;
@@ -24,12 +25,14 @@ class unimage {
 		var img = new Image;
 		var self = this;
 		img.onload = function() {
-			canvas.width = img.width;
-			canvas.height = img.height;
-			ctx.drawImage(img, 0,0, img.width, img.height);
-			self.original = ctx.getImageData(0, 0, img.width, img.height);
+			const aspectRatio = img.width / img.height;
+			canvas.width = 32;
+			canvas.height = Math.round(32 / aspectRatio);
+			ctx.drawImage(img, 0,0, canvas.width, canvas.height);
+			self.original = ctx.getImageData(0, 0, canvas.width, canvas.height);
 			URL.revokeObjectURL(img.src);
 			self.generateBinaryString();
+			self.generateMonochromeString();
 		};
 		img.src = URL.createObjectURL(file);
 	}
@@ -40,7 +43,6 @@ class unimage {
 	}
 	
 	generateMonochrome(){
-		console.log('generating monochrome...');
 		this.monochrome = new ImageData(this.original.width, this.original.height);
 		for (let i = 0; i < this.original.data.length; i += 4){
 			let value = 
@@ -54,8 +56,27 @@ class unimage {
 		}
 	}
 	
+	generateMonochromeString(){
+		if(this.monochrome == undefined){
+			this.generateMonochrome();
+		}
+		for(let y = 0; y < this.canvas.height; y++) {
+			for(let x = 0; x < this.canvas.width * 4; x += 4){
+				this.monochromeString += this.brightnessValueToBlockSymbol(this.monochrome.data[this.monochrome.width * y * 4 + x]);
+			}
+			this.monochromeString += '<br>';
+		}
+	}
+	
+	brightnessValueToBlockSymbol(value){
+		if (value > 204) return '█';
+		if (value > 153) return '▓';
+		if (value > 102) return '▒';
+		if (value > 51) return '░';
+		return ' ';
+	}
+	
 	generateBinary(){
-		console.log('generating binary...');
 		if(this.monochrome == undefined){
 			this.generateMonochrome();
 		}
@@ -71,50 +92,11 @@ class unimage {
 		if(this.binary == undefined){
 			this.generateBinary();	
 		}
-		console.log('starting');
-		for(let y = 0; y < this.canvas.height / 2; y++) {
-			console.log('line done');
-			for(let x = 0; x < this.canvas.width / 2; x++){
-				this.binaryString += this.getBinaryBlock(x, y);
+		for(let y = 0; y < this.canvas.height; y++) {
+			for(let x = 0; x < this.canvas.width * 4; x += 4){
+				this.binaryString += this.binary.data[this.binary.width * y * 4 + x] > 0 ? '█' : ' ';
 			}
 			this.binaryString += '<br>';
-		}
-		console.log(this.binaryString);
-		console.log('done');
-	}
-	
-	getBinaryBlock(x,y){
-		var topleft = this.binary.width * 8 * y + x * 8;
-		var topright = topleft + 4;
-		var bottomleft = topleft + this.binary.width * 8;
-		var bottomright = bottomleft + 4;
-		return this.blockSymbol(
-			this.binary.data[topleft], 
-			this.binary.data[topright], 
-			this.binary.data[bottomleft], 
-			this.binary.data[bottomright]
-			);
-	}
-	
-	blockSymbol(topleft, topright, bottomleft, bottomright){
-		var binaryCode = 8 * (topleft != 0) + 4 * (topright != 0) + 2 * (bottomleft != 0) + 1 * (bottomright != 0);
-		switch(binaryCode){
-			case 0: return '&nbsp;'
-			case 1: return '▗';
-			case 2: return '▖';
-			case 3: return '▅';
-			case 4: return '▝';
-			case 5: return '▐';
-			case 6: return '▞';
-			case 7: return '▟';
-			case 8: return '▘';
-			case 9: return '▚';
-			case 10: return '▋';
-			case 11: return '▙';
-			case 12: return '▀';
-			case 13: return '▜';
-			case 14: return '▛';
-			case 15: return '▉';
 		}
 	}
 	

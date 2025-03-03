@@ -60,7 +60,7 @@ const commands = {
 	listgames: {
 		execute: listGames,
 		description: 'Lists all available games',
-		info: ui.htmlFromString({text: 'Usage: <i>listGames</i>'}),
+		info: ui.htmlFromString({text: 'Usage: <i>listgames</i>'}),
 		noAdditionalParameters: true,
 		structure: [],
 	},
@@ -131,10 +131,11 @@ async function renderImage(file){
 	var img = new unimage(file);
 	// TODO: Find a clean way to wait until the image has loaded...
 	await sleep(1000);
-	let div = ui.htmlFromString({text: img.binaryString});
-	div.classList.add('webConsole-snake');
+	let div = ui.htmlFromString({text: img.monochromeString, parentElement: 'div'});
+	div.classList.add('webConsole-img');
+	div.style.fontSize = (16 / img.canvas.width) * 100 + '%';
+	div.style.lineHeight = '1';
 	log(div);
-	console.log(img.binaryString);	
 }
 
 function sleep(ms) {
