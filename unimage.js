@@ -35,6 +35,7 @@ class unimage {
 			ctx.drawImage(img, 0,0, canvas.width, canvas.height);
 			self.original = ctx.getImageData(0, 0, canvas.width, canvas.height);
 			URL.revokeObjectURL(img.src);
+			self.improveMonochromeContrast();
 			self.generateBinaryString();
 			self.generateMonochromeString();
 			init_cb();
@@ -128,5 +129,46 @@ class unimage {
 			this.generateBinaryString();
 		}
 		return this.binaryString;
+	}
+	
+	monochromeHistogramm(){
+	    if (this.monochrome == undefined) {
+	        this.generateMonochrome();
+	    }
+	    var hist = Array(256).fill(0);
+	    for (let i = 0; i < this.monochrome.data.length; i += 4) {
+	        hist[this.monochrome.data[i]]++;
+	    }
+	    return hist;
+	}
+	
+	improveMonochromeContrast() {
+	    if (this.monochrome == undefined) {
+	        this.generateMonochrome();
+	    }
+	    var min, max;
+	    var hist = this.monochromeHistogramm();
+	    var th = (this.monochrome.data.length / 4 ) * 0.05; // threshold = 5% of total number ofpixels
+	    for (let i = 0; i < hist.length; i++) {
+	        if (hist[i] > th) {
+	            min = i;
+	            break;
+	        }
+	    }
+	    for (let i = hist.length; i > 0; i--) {
+	        if (hist[i] > th) {
+	            max = i;
+	            break;
+	        }
+	    }
+	    if (min == undefined) return;
+	    let alpha = 255 / (max - min);
+	    let beta = min;
+	    for (let i = 0; i < this.monochrome.data.length; i += 4) {
+	        let v = Math.floor((this.monochrome.data[i] - beta) * alpha);
+	        this.monochrome.data[i] = v;
+	        this.monochrome.data[i + 1] = v;
+	        this.monochrome.data[i + 2] = v;
+	    }
 	}
 }

@@ -135,6 +135,7 @@ function loadImage(params){
 
 function renderImage(file){
 	var img = new unimage({file, width: 64, init_cb: logImg});
+	log(`Loading ${ file.name}...`);
 	
 	function logImg() {
 	    let div = ui.htmlFromString({text: img.monochromeString, parentElement: 'div'});

@@ -1,4 +1,3 @@
 Colorthemes
 configurations lokal speichern
 targetresolution als parameter für img
-img kontrast erhöhen (option festlegen)
