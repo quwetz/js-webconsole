@@ -76,8 +76,8 @@ const commands = {
 	img: {
 		execute: loadImage,
 		description: 'Loads a local image and converts it to a utf8 text image (locally)',
-		info: ui.htmlFromString({text: 'Usage: <i>img</i>'}),
-		noAdditionalParameters: true,
+		info: ui.htmlFromString({text: 'Usage: <i>img</i>, '}),
+		noAdditionalParameters: false,
 		structure: [],
 	},
 	cv: {
@@ -136,15 +136,16 @@ function loadImage(){
 	input.click();
 }
 
-async function renderImage(file){
-	var img = new unimage(file);
-	// TODO: Find a clean way to wait until the image has loaded...
-	await sleep(1000);
-	let div = ui.htmlFromString({text: img.monochromeString, parentElement: 'div'});
-	div.classList.add('webConsole-img');
-	div.style.fontSize = (16 / img.canvas.width) * 100 + '%';
-	div.style.lineHeight = '1';
-	log(div);
+function renderImage(file){
+	var img = new unimage({file, init_cb: logImg});
+	
+	function logImg() {
+	    let div = ui.htmlFromString({text: img.monochromeString, parentElement: 'div'});
+        div.classList.add('webConsole-img');
+        div.style.fontSize = (16 / img.canvas.width) * 100 + '%';
+        div.style.lineHeight = '1';
+        log(div);
+	}
 }
 
 function sleep(ms) {

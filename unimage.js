@@ -17,7 +17,7 @@ class unimage {
 	binaryThreshold = 128;
 	
 	
-	constructor(file){
+	constructor({file, width = 32, height, init_cb}){
 		var canvas = document.createElement('canvas');
 		var ctx = canvas.getContext('2d');
 		this.canvas = canvas;
@@ -26,13 +26,18 @@ class unimage {
 		var self = this;
 		img.onload = function() {
 			const aspectRatio = img.width / img.height;
-			canvas.width = 32;
-			canvas.height = Math.round(32 / aspectRatio);
+			canvas.width = width;
+			if(height == undefined){
+			    canvas.height = Math.round(32 / aspectRatio);
+			} else {
+			    canvas.height = height;
+			}
 			ctx.drawImage(img, 0,0, canvas.width, canvas.height);
 			self.original = ctx.getImageData(0, 0, canvas.width, canvas.height);
 			URL.revokeObjectURL(img.src);
 			self.generateBinaryString();
 			self.generateMonochromeString();
+			init_cb();
 		};
 		img.src = URL.createObjectURL(file);
 	}
