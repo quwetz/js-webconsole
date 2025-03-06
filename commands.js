@@ -1,21 +1,13 @@
 'use-strict';
 
 import {log, runApp, enterCommand} from './console.js';
-import {newGame as startSnake} from './snake.js';
 import * as ui from './ui-elements.js';
 import {createCommandButton as cmdBtn} from './ui-elements.js';
-import {unimage} from './unimage.js';
 import * as util from './util.js';
-import {cv} from './cv.js';
+export {commands, games, nextParameter};
 
-export {commands, nextParameter};
 
-const games = {
-	snake: {
-		newGame: startSnake,
-		info: 'TODO: insert info',
-	},
-}
+const games = {}
 
 const colorIdentifiers = ['foreground', 'background', 'link', 'alert'];
 
@@ -34,7 +26,6 @@ const commands = {
 		noAdditionalParameters: false,
 		structure: [{label: 'command', items: undefined, mandatory: false}],
 		},
-		
 	echo: {	
 		execute: log, 
 		description: 'Prints text to the  console',
@@ -70,20 +61,6 @@ const commands = {
 		noAdditionalParameters: false,
 		structure: [{label: 'size', items: 'size', mandatory: true}],
 	},
-	img: {
-		execute: loadImage,
-		description: 'Loads a local image and converts it to a utf8 text image (locally)',
-		info: ui.htmlFromString({text: 'Usage: <i>img</i>, '}),
-		noAdditionalParameters: false,
-		structure: [],
-	},
-	cv: {
-		execute: () => (log(cv)),
-		description: 'Displays my curriculum vitae',
-		info: ui.htmlFromString({text: 'Usage: <i>cv</i>'}),
-		noAdditionalParameters: true,
-		structure: [],
-	},
 };
 
 commands.help.structure[0].items = Object.keys(commands);
@@ -115,42 +92,6 @@ function home(){
 	log('To browse this site, just enter a command or click a button.');
 	log(['Enter or click ', cmdBtn({commandString: 'help', autoSubmit: true}), ' for a list of available commands']);
 	log(['The code used for this UI is open source and available at ', ui.htmlFromString({text: '<a href="https://github.com/quwetz/js-webconsole">github.com/quwetz/js-webconsole</a>', container: 'span'})]);
-}
-
-function loadImage(params){
-	var input = document.createElement('input');
-	
-	input.type = 'file';
-	input.id = 'image_upload';
-	input.accept = '.jpg, .jpeg, .png';
-	input.addEventListener('change', function(event){
-			renderImage(event.target.files[0]);
-			event.target.remove();
-		});
-	input.addEventListener('cancel', function(event){
-			log('no image chosen');
-			event.target.remove();
-		});
-	input.classList.add('webConsole-doNotDisplay');
-	document.body.appendChild(input);
-	input.click();
-}
-
-function renderImage(file){
-	var img = new unimage({file, width: 64, init_cb: logImg});
-	log(`Loading ${ file.name}...`);
-	
-	function logImg() {
-	    let div = ui.htmlFromString({text: img.monochromeString, container: 'div'});
-        div.classList.add('webConsole-img');
-        div.style.fontSize = (16 / img.canvas.width) * 100 + '%';
-        div.style.lineHeight = '1';
-        log(div);
-	}
-}
-
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 function setFontSize(params){

@@ -3,6 +3,15 @@
 import * as shell from './console.js';
 import * as ui from './ui-elements.js';
 
+// import commands
+import './img.js';
+import './cv.js';
+
+// import games
+import './minesweeper.js';
+import './snake.js';
+
+
 var console = shell.init();
 // document.body.appendChild(ui.createCommandButton('home', true));
 // document.body.appendChild(ui.createCommandButton('games', true));
