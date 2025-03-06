@@ -1,8 +1,8 @@
 'use-strict';
 
-export {unimage};
+export {ImageProcessor};
 
-class unimage {
+class ImageProcessor {
 	canvas;
 	ctx;
 	

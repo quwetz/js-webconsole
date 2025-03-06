@@ -1,6 +1,6 @@
 import {commands} from './commands.js';
 import * as ui from './ui-elements.js';
-import {unimage} from './unimage.js';
+import {ImageProcessor} from './image-processor.js';
 import {log} from './console.js';
 
 commands['img'] = {
@@ -31,7 +31,7 @@ function loadImage(params){
 }
 
 function renderImage(file){
-	var img = new unimage({file, width: 64, init_cb: logImg});
+	var img = new ImageProcessor({file, width: 64, init_cb: logImg});
 	log(`Loading ${ file.name}...`);
 	
 	function logImg() {

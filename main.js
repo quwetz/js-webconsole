@@ -5,7 +5,7 @@ import * as ui from './ui-elements.js';
 
 // import commands
 import './img.js';
-import './cv.js';
+import './mysite/cv.js';
 
 // import games
 import './minesweeper.js';
@@ -13,9 +13,6 @@ import './snake.js';
 
 
 var console = shell.init();
-// document.body.appendChild(ui.createCommandButton('home', true));
-// document.body.appendChild(ui.createCommandButton('games', true));
-// document.body.appendChild(ui.createCommandButton('help', true));
 
 document.body.appendChild(console);
 shell.focusPromptInput();
