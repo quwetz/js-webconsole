@@ -1,8 +1,8 @@
-import * as ui from './ui-elements.js';
-import * as gestures from './gestures.js';
-import {games} from './commands.js';
+import * as ui from '../ui-elements.js';
+import * as gestures from '../gestures.js';
+import {apps} from '../commands.js';
 
-games['snake'] = {newGame, info: 'TODO: insert info about snake'};
+apps.snake = {startApp: newGame, info: 'TODO: insert info about snake'};
 
 function newGame(targetElement, close_cb, params){
 	var touch = gestures.init(window);

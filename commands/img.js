@@ -1,12 +1,12 @@
-import {commands} from './commands.js';
-import * as ui from './ui-elements.js';
+import {commands} from '../commands.js';
+import * as ui from '../ui-elements.js';
 import {ImageProcessor} from './image-processor.js';
-import {log} from './console.js';
+import {log} from '../console.js';
 
-commands['img'] = {
+commands.img = {
 		execute: loadImage,
 		description: 'Loads a local image and converts it to a utf8 text image (locally)',
-		info: ui.htmlFromString({text: 'Usage: <i>img</i>, '}),
+		info: ui.htmlFromString({text: 'Usage: <i>img</i>'}),
 		noAdditionalParameters: false,
 		structure: [],
 	};

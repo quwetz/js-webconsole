@@ -4,12 +4,12 @@ import * as shell from './console.js';
 import * as ui from './ui-elements.js';
 
 // import commands
-import './img.js';
+import './commands/img.js';
 import './mysite/cv.js';
 
-// import games
-import './minesweeper.js';
-import './snake.js';
+// import apps
+import './apps/minesweeper.js';
+import './apps/snake.js';
 
 
 var console = shell.init();

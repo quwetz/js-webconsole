@@ -12,8 +12,8 @@ var consoleContainer, logContainer, commandPrompt, promptInput;
 var commandHistory = [];
 var commandHistoryIndex;
 var activeApp;
-
-var contextMenu;
+var autoCompleteHelp;
+var optionsIndex = 0;
 
 document.body.addEventListener('keydown', keyPressed);
 
@@ -35,6 +35,8 @@ function init(){
 	commandPrompt.appendChild(ui.createSubmitButton(1, 'span')).classList.add('webConsole-promptSubmitButton');
 	consoleContainer.appendChild(commandPrompt);
 	
+	cmd.initializeCommandStructures();
+	
 	return consoleContainer;
 }
 
@@ -42,11 +44,12 @@ function focusPromptInput(){
 	promptInput.focus();
 }
 
-function removeElementsByClass(className) {
-    let elements = document.getElementsByClassName(className);
-    while(elements.length > 0) {
-        elements[0].parentNode.removeChild(elements[0]);
-    }
+function setupPromptCursorForTextInput(){
+	if (promptInput.value != ''){
+		promptInput.value = promptInput.value.trimEnd() + ' ';
+	}
+	focusPromptInput();
+	removeAutoCompleteHelp();
 }
 
 function keyPressed(){
@@ -55,7 +58,17 @@ function keyPressed(){
 			case 'Enter':
 				processPromptInput();
 				break;
+			case 'ArrowRight':
+			    if(autoCompleteHelp != undefined && autoCompleteHelp.nodeName == 'SELECT' && optionsIndex != 0){
+			        enterCommand({commandString: autoCompleteHelp.value, autoSubmit: false, clear: false})
+			    }
+			    break;
 			case 'ArrowUp':
+			    if(autoCompleteHelp != undefined && autoCompleteHelp.nodeName == 'SELECT'){
+			        autoCompleteHelp.value = prevOption();
+			        event.preventDefault();
+			        break;
+			    }
 				if(commandHistory.length > 0 ){
 					if(commandHistory[commandHistoryIndex] == undefined || commandHistoryIndex === 0){
 						commandHistoryIndex = commandHistory.length - 1;
@@ -67,6 +80,10 @@ function keyPressed(){
 				}
 				break;
 			case 'ArrowDown':
+			     if(autoCompleteHelp != undefined && autoCompleteHelp.nodeName == 'SELECT'){
+			        autoCompleteHelp.value = nextOption();  
+			        break;
+			    }
 				if(commandHistory.length > 0 ){
 					if(commandHistory[commandHistoryIndex] == undefined || commandHistoryIndex === (commandHistory.length - 1)){
 						commandHistoryIndex = 0;
@@ -76,6 +93,11 @@ function keyPressed(){
 					promptInput.value = commandHistory[commandHistoryIndex];
 				}
 				break;
+			case 'Escape':
+			    promptInput.value = '';
+			    removeAutoCompleteHelp();
+			    focusPromptInput();
+			    break;
 			default:
 				commandHistoryIndex = commandHistory.length - 1;
 				promptInput.focus();
@@ -84,6 +106,19 @@ function keyPressed(){
 		return;
 	}
 	activeApp.keyPressed();
+}
+
+function nextOption(){
+    optionsIndex++;
+    optionsIndex %= autoCompleteHelp.options.length;
+    if (optionsIndex == 0) optionsIndex++;
+    return autoCompleteHelp.options[optionsIndex].value;
+}
+
+function prevOption(){
+    optionsIndex--;
+    if (optionsIndex <= 0) optionsIndex = autoCompleteHelp.options.length - 1;
+    return autoCompleteHelp.options[optionsIndex].value;
 }
 
 function processPromptInput(){	
@@ -159,13 +194,13 @@ function closeApp(targetElement){
 }
 
 function enterCommand({commandString, autoSubmit = false, clear = true, initialDelay = 0}){
-	removeAutoCompleteHelp();
 	var delay = initialDelay;
 	if(clear) {
 		promptInput.value ='';
 	} else {
 		promptInput.value = promptInput.value.trimEnd() + ' ';
 	}
+	removeAutoCompleteHelp();
 	for (let c of commandString){
 		setTimeout(() => (promptInput.value += c), delay);
 		delay += (Math.random() * 10) + 10;
@@ -188,19 +223,13 @@ function displayAutoCompleteHelp(){
 	removeAutoCompleteHelp();
 	var param = cmd.nextParameter(promptInput.value);
 	if (param == undefined) return;
-	let element = ui.createAutoCompleteHelp(param);
-	commandPrompt.appendChild(element);
-	element.style.left = (promptInput.value.trimEnd().length + 2) + 'ch';
-}
-
-function setupPromptCursorForTextInput(){
-	if (promptInput.value != ''){
-		promptInput.value = promptInput.value.trimEnd() + ' ';
-	}
-	focusPromptInput();
-	removeAutoCompleteHelp();
+	autoCompleteHelp = ui.createAutoCompleteHelp(param);
+	commandPrompt.appendChild(autoCompleteHelp);
+	autoCompleteHelp.style.left = (promptInput.value.trimEnd().length + 2) + 'ch';
 }
 
 function removeAutoCompleteHelp(){
-	removeElementsByClass('webConsole-autoCompleteHelp');
+	autoCompleteHelp = undefined;
+	util.removeElementsByClass('webConsole-autoCompleteHelp');
+	optionsIndex = 0;
 }

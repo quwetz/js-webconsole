@@ -4,10 +4,10 @@ import {log, runApp, enterCommand} from './console.js';
 import * as ui from './ui-elements.js';
 import {createCommandButton as cmdBtn} from './ui-elements.js';
 import * as util from './util.js';
-export {commands, games, nextParameter};
+export {commands, apps, nextParameter, initializeCommandStructures};
 
 
-const games = {}
+const apps = {};
 
 const colorIdentifiers = ['foreground', 'background', 'link', 'alert'];
 
@@ -41,16 +41,16 @@ const commands = {
 		structure: [{label: 'identifier', items: colorIdentifiers, mandatory: true}, {label: 'color', items: 'color', mandatory: true}],
 	},
 	start: {
-		execute: startGame,
-		description: 'Runs a game in the console',
-		info: ui.htmlFromString({text: 'Usage: <i>startgame (game_name) [parameters]...</i><br>Example: <i>startgame snake</i><br>Use <i>games</i> to list available games'}),
+		execute: startApp,
+		description: 'Runs an App in the console',
+		info: ui.htmlFromString({text: 'Usage: <i>startapp (app_name) [parameters]...</i><br>Example: <i>start snake</i><br>Use <i>listapps</i> to list available apps'}),
 		noAdditionalParameters: false,
-		structure: [{label: 'game', items: Object.keys(games), mandatory: true}],
+		structure: [{label: 'app', items: undefined, mandatory: true}],
 	},
-	listgames: {
-		execute: listGames,
-		description: 'Lists all available games',
-		info: ui.htmlFromString({text: 'Usage: <i>listgames</i>'}),
+	listapps: {
+		execute: listApps,
+		description: 'Lists all available apps',
+		info: ui.htmlFromString({text: 'Usage: <i>listapps</i>'}),
 		noAdditionalParameters: true,
 		structure: [],
 	},
@@ -63,7 +63,13 @@ const commands = {
 	},
 };
 
-commands.help.structure[0].items = Object.keys(commands);
+/** This needs to be called after all commands and structures have been loaded from other scripts!
+*   By Default this is done in console.js init().
+*/
+function initializeCommandStructures(){
+    commands.help.structure[0].items = Object.keys(commands);
+    commands.start.structure[0].items = Object.keys(apps);
+}
 
 function echo(params){
 	log(params);
@@ -114,23 +120,23 @@ function setFontSize(params){
 	}
 }
 
-function startGame(params){
+function startApp(params){
 	if(params == undefined){
-		log('Missing parameter. Which game should be run?')
-		listGames();
+		log('Missing parameter. Which App should be run?')
+		listApps();
 		return;
 	}
-	var [game, gameParams] = util.splitAtFirstSpace(params);
-	if(Object.keys(games).includes(game)){
-		runApp(games[game].newGame, gameParams);
+	var [app, appParams] = util.splitAtFirstSpace(params);
+	if(Object.keys(apps).includes(app)){
+		runApp(apps[app].startApp, appParams);
 		return;
 	}
-	log('Unknown game: ' + game);
+	log('Unknown app: ' + app);
 }
 
-function listGames(){
-	log('Available Games:');
-	Object.keys(games).forEach((e) => log(ui.createButton({
+function listApps(){
+	log('Available Apps:');
+	Object.keys(apps).forEach((e) => log(ui.createButton({
 		text: e, 
 		action: enterCommand,
 		actionParameter: {

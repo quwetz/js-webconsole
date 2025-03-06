@@ -157,7 +157,7 @@ option:disabled {
 select.webConsole-autoCompleteHelp, .webConsole-autoCompleteHelp {
 	position: absolute;
 	font-family: inherit;
-	font-size: var(--font-size);
+	font-size: inherit;
 	background: none;
 	border-width: 1px;
 	border-radius: 2px;
@@ -165,9 +165,11 @@ select.webConsole-autoCompleteHelp, .webConsole-autoCompleteHelp {
 	border-style: solid;
 	color: var(--foreground-color);
 	width: auto;
-	bottom: 0em;
+	padding: 0;
+	bottom: 0.1em;
 	opacity: 0.5;
-	height: 1.2em;
+	height: 1.25em;
+	text-align: center;
 	transition: opacity 0.25s ease;
 	cursor: pointer;
 }
