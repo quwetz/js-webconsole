@@ -1,8 +1,13 @@
+/**
+ * @module img
+ * @description A plugin for js-webconsole that adds the game snake to available apps. 
+ */
+
 import * as ui from '../ui-elements.js';
 import * as gestures from '../gestures.js';
-import {apps} from '../commands.js';
+import {registerApp} from '../commands.js';
 
-apps.snake = {startApp: newGame, info: 'TODO: insert info about snake'};
+registerApp({name: 'snake', startApp: newGame, info: 'TODO: insert info about snake'});
 
 function newGame(targetElement, close_cb, params){
 	var touch = gestures.init(window);
@@ -73,7 +78,6 @@ function newGame(targetElement, close_cb, params){
 	
 	var field = initField();
 	placeApple();
-	console.log(field);
 	
 	var fps = 15;
 	var intervalID = setInterval(update, 1000/fps);

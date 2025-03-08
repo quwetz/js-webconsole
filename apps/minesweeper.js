@@ -1,6 +1,6 @@
-import {apps} from '../commands.js';
+import {registerApp} from '../commands.js';
 
-apps.minesweeper = {startApp: start, info: 'TODO: insert info about minesweeper'};
+registerApp({name: 'minesweeper', startApp: start, info: 'TODO: insert info about minesweeper'});
 
 function start() {
 

@@ -2,6 +2,7 @@
 
 export {ImageProcessor};
 
+/** Class for processing an Image into Grayscale, Binary and ASCII renderings */
 class ImageProcessor {
 	canvas;
 	ctx;
@@ -16,7 +17,14 @@ class ImageProcessor {
 	
 	binaryThreshold = 128;
 	
-	
+	/**
+	 * Loads an image from a file, scales it to width and height and does the processing.
+	 * @param {object} param
+     * @param {object} param.file - the image file to load
+     * @param {number} [param.width=32] - the target width
+     * @param {number} [param.height=derived from width and the original aspect ratio] - the target height
+     * @param {function} [param.init_cb] - function to call when processing is finished
+	 */
 	constructor({file, width = 32, height, init_cb}){
 		var canvas = document.createElement('canvas');
 		var ctx = canvas.getContext('2d');
@@ -38,7 +46,9 @@ class ImageProcessor {
 			self.improveMonochromeContrast();
 			self.generateBinaryString();
 			self.generateMonochromeString();
-			init_cb();
+			if(typeof init_cb == 'function'){
+			    init_cb();
+			}
 		};
 		img.src = URL.createObjectURL(file);
 	}
@@ -124,6 +134,21 @@ class ImageProcessor {
 		this.ctx.putImageData(this.binary, 0, 0);
 	}
 
+    /**
+     * Get the Monochrome ASCII image using ASCII-Block Symbols
+     * @returns a string containing the image as a monochrome ASCII image
+     */
+    getMonochromeString(){
+        if(this.monochromeString == undefined){
+            this.generateMonochromeString();
+        }
+        return this.monochromeString;
+    }
+
+    /**
+     * Get the Binary ASCII image using ASCII-Block Symbols
+     * @returns a string containing the image as a binary ASCII image
+     */
 	getBinaryString(){
 		if (this.binaryString == undefined) {
 			this.generateBinaryString();

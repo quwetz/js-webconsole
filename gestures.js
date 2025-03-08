@@ -22,7 +22,7 @@
 /**
  * Initializes gesture detection on a DOM element.
  * @param {HTMLElement} el - The DOM element to monitor for touch gestures.
- * @returns {GesturesAPI} - An API object for subscribing/unsubscribing to gestures.
+ * @returns {GesturesAPI} An API object for subscribing/unsubscribing to gestures.
  */
 export function init(el){     
     el.addEventListener("touchstart", handleStart);

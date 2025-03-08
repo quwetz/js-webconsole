@@ -1,16 +1,23 @@
-'use-strict';
+/**
+ * @module commands
+ * @description The commands moldule of js-webconsole. Here are all available commands defined or registered.
+ */
+
+/**
+ * The parameter item Object
+ * @typedef {Object} ParameterItem
+ * @property {string} label - The label of the item.
+ * @property {string|Array} items - Either a string representing the type of parameter (e.g. color, text, ...) or an Array of different values to choose from (e.g. the callable apps for the run command).
+ * @property {boolean} mandatory - Flag if parameter is mandatory
+ */
 
 import {log, runApp, enterCommand} from './console.js';
 import * as ui from './ui-elements.js';
 import {createCommandButton as cmdBtn} from './ui-elements.js';
 import * as util from './util.js';
-export {commands, apps, nextParameter, initializeCommandStructures};
-
-
-const apps = {};
 
 const colorIdentifiers = ['foreground', 'background', 'link', 'alert'];
-
+const apps = {};
 const commands = {
 	home: {
 		execute: home, 
@@ -40,10 +47,10 @@ const commands = {
 		noAdditionalParameters: false,
 		structure: [{label: 'identifier', items: colorIdentifiers, mandatory: true}, {label: 'color', items: 'color', mandatory: true}],
 	},
-	start: {
+	run: {
 		execute: startApp,
 		description: 'Runs an App in the console',
-		info: ui.htmlFromString({text: 'Usage: <i>startapp (app_name) [parameters]...</i><br>Example: <i>start snake</i><br>Use <i>listapps</i> to list available apps'}),
+		info: ui.htmlFromString({text: 'Usage: <i>run (app_name) [parameters]...</i><br>Example: <i>run snake</i><br>Use <i>listapps</i> to list available apps'}),
 		noAdditionalParameters: false,
 		structure: [{label: 'app', items: undefined, mandatory: true}],
 	},
@@ -63,12 +70,101 @@ const commands = {
 	},
 };
 
-/** This needs to be called after all commands and structures have been loaded from other scripts!
-*   By Default this is done in console.js init().
-*/
-function initializeCommandStructures(){
+
+///////////////////////////////////////////////////////////////////////////////
+////// Public Methods
+///////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Goes through currentInput and the command's structure to find the next possible command parameter.
+ * The found command parameter can then be used for autocompletion for example.
+ * @param {string} currentInput - the current commandline input string
+ * @returns {ParameterItem | undefined} undefined if there is no next parameter for the currentInput. (Either the currentInput is not a valid command string or there are no more parameters) otherwise it returns the next ParameterItem
+ *
+ */
+export function nextParameter(currentInput){
+	var commandChain = currentInput.trim().split(' ').filter((s) => (s != ''));
+	if (commandChain.length == 0) return undefined;
+	let currentToken = commandChain.shift();
+	if (!commands.hasOwnProperty(currentToken)) return undefined;
+	
+	let structure = commands[currentToken].structure;
+	if (structure.length < commandChain.length) return undefined;
+	
+	let i = 0;
+	for (; i < commandChain.length; i++) {
+		let items = structure[i].items;
+		if (Array.isArray(items)){
+			if (!items.includes(commandChain[i])) return undefined;
+		} 
+	}
+	return structure[i];
+}
+
+/**
+ * Registers a new command. If a command with the same name is already registered, it will be overwritten.
+ * @param {string} command - keyword by which the command can be called (Must contain only alphanumerical characters)
+ * @param {Object} commandData
+ * @param {function} commandData.execute - the callback for the command
+ * @param {string} commandData.description - short description of the command
+ * @param {string} commandData.info - more in-depth description, ideally including ***usage*** and ***examples***
+ * @param {boolean} commandData.noAdditionalParameters - Flag specifying if their are no additional parameters or options
+ * @param {Array<ParameterItem>} commandData.structure - the structure of the command 
+ * @throws {Error} if command is not a string or contains any illegal characters
+ */
+export function registerCommand(command, commandData){
+    if (typeof command != 'string') {
+        throw new Error(command + ' is not a string');
+    }
+    if (!util.isAlphaNumeric(command)) {
+        throw new Error(command + ' contains illegal characters');
+    }
+    commands[command] = commandData;
+    updateHelpStructure();
+}
+
+/**
+ * Registers a new app. If an app with the same name is already registered it will be overwritten.
+ * @param {Object} appData
+ * @param {string} appData.name - the apps name (must contain only alphanumerical characters)
+ * @param {function} appData.startApp - the function to call to start the app
+ * @param {string} appData.info -info, ideally including ***usage*** and ***examples***
+ * @throws {Error} if name is not a string or contains any illegal characters
+ */
+export function registerApp({name, startApp, info}){
+    if (typeof name != 'string') {
+        throw new Error(name + ' is not a string');
+    }
+    if (!util.isAlphaNumeric(name)) {
+        throw new Error(name + ' contains illegal characters');
+    }
+    apps[name] = {startApp: startApp, info: info};
+    updateRunStructure();
+}
+
+/**
+ * executes a given commandString if valid, otherwise logs an error message to js-webconsole
+ * @param {string} commandString - the command String
+ */
+export function executeCommand(commandString){
+    var [command, rest] = util.splitAtFirstSpace(commandString);
+	if(Object.keys(commands).includes(command)){
+		commands[command].execute(rest);
+	} else {
+		log('Unknown command: ' + command);
+	}	
+}
+
+///////////////////////////////////////////////////////////////////////////////
+////// Private Methods
+///////////////////////////////////////////////////////////////////////////////
+
+function updateHelpStructure(){
     commands.help.structure[0].items = Object.keys(commands);
-    commands.start.structure[0].items = Object.keys(apps);
+}
+
+function updateRunStructure(){
+    commands.run.structure[0].items = Object.keys(apps);
 }
 
 function echo(params){
@@ -184,28 +280,4 @@ function isColor(color){
 function logColorConversionError(){
 	log('Illegal color formatting. Use a valid css color format.');
 	log('Examples: black, rgb(0,0,0) or #000000');
-}
-
-
-/**	Goes through currentInput and the commands chain and returns the next possible parameter.
-/*	Returns undefined if there are no parameters for the currentInput. (Either the input is not a valid command or there are no more parameters)
-/*
-*/
-function nextParameter(currentInput){
-	var commandChain = currentInput.trim().split(' ').filter((s) => (s != ''));
-	if (commandChain.length == 0) return undefined;
-	let currentToken = commandChain.shift();
-	if (!commands.hasOwnProperty(currentToken)) return undefined;
-	
-	let structure = commands[currentToken].structure;
-	if (structure.length < commandChain.length) return undefined;
-	
-	let i = 0;
-	for (; i < commandChain.length; i++) {
-		let items = structure[i].items;
-		if (Array.isArray(items)){
-			if (!items.includes(commandChain[i])) return undefined;
-		} 
-	}
-	return structure[i];
 }

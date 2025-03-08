@@ -1,15 +1,21 @@
-import {commands} from '../commands.js';
+/**
+ * @module img
+ * @description A plugin for js-webconsole that adds the ***img*** command. 
+ * ***img*** generates an ASCII Grayscale render of a given image. Everything is done locally, no data is sent anywhere.
+ */
+
+import {registerCommand} from '../commands.js';
 import * as ui from '../ui-elements.js';
 import {ImageProcessor} from './image-processor.js';
 import {log} from '../console.js';
 
-commands.img = {
+registerCommand('img', {
 		execute: loadImage,
 		description: 'Loads a local image and converts it to a utf8 text image (locally)',
 		info: ui.htmlFromString({text: 'Usage: <i>img</i>'}),
 		noAdditionalParameters: false,
 		structure: [],
-	};
+	});
 
 function loadImage(params){
 	var input = document.createElement('input');
@@ -35,7 +41,7 @@ function renderImage(file){
 	log(`Loading ${ file.name}...`);
 	
 	function logImg() {
-	    let div = ui.htmlFromString({text: img.monochromeString, container: 'div'});
+	    let div = ui.htmlFromString({text: img.getMonochromeString(), container: 'div'});
         div.classList.add('webConsole-img');
         div.style.fontSize = (16 / img.canvas.width) * 100 + '%';
         div.style.lineHeight = '1';

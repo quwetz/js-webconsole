@@ -35,8 +35,6 @@ function init(){
 	commandPrompt.appendChild(ui.createSubmitButton(1, 'span')).classList.add('webConsole-promptSubmitButton');
 	consoleContainer.appendChild(commandPrompt);
 	
-	cmd.initializeCommandStructures();
-	
 	return consoleContainer;
 }
 
@@ -131,16 +129,7 @@ function processPromptInput(){
 	}
 	commandHistory.push(commandString);
 	promptInput.value = '';
-	parseCommand(commandString);
-}
-
-function parseCommand(commandString){
-	var [command, rest] = util.splitAtFirstSpace(commandString);
-	if(Object.keys(cmd.commands).includes(command)){
-		cmd.commands[command].execute(rest);
-	} else {
-		log('Unknown command: ' + command);
-	}			
+	cmd.executeCommand(commandString);
 }
 
 function log(msg){
