@@ -1,5 +1,5 @@
 /**
- * @module img
+ * @module snake
  * @description A plugin for js-webconsole that adds the game snake to available apps. 
  */
 
@@ -10,6 +10,10 @@ import {registerApp} from '../commands.js';
 registerApp({name: 'snake', startApp: newGame, info: 'TODO: insert info about snake'});
 
 function newGame(targetElement, close_cb, params){
+    
+    const prevFontSize = window.getComputedStyle(document.documentElement).getPropertyValue('--font-size');
+    document.documentElement.style.setProperty('--font-size', 'clamp(3px, 2.6vw, 20px)');
+    
 	var touch = gestures.init(window);
     touch.subscribe('strokeRight', () => (inputQueue.push('ArrowRight')));
     touch.subscribe('strokeDown', () => (inputQueue.push('ArrowDown')));
@@ -149,6 +153,7 @@ function newGame(targetElement, close_cb, params){
 	function quit(){
 		console.log('quit called');
 		enableScrolling();
+        document.documentElement.style.setProperty('--font-size', prevFontSize);
 		closeFunction(targetElement);
 	}
 	

@@ -18,7 +18,7 @@
 	--foreground-color: lime;
 	--alert-color: red;
 	--link-color: deepskyblue;
-	--font-size: clamp(6px, 4.5vw, 20px);
+	--font-size: clamp(3px, 4.5vw, 20px);
 	--font: 'Fira Code', 'Courier New', monospace;
 }
 
@@ -29,6 +29,7 @@ body {
 	font-size: var(--font-size);
 	color: var(--foreground-color);
 	line-height: 1em;
+	transition: font-size 0.5s ease;
 }
 
 a {
@@ -109,10 +110,10 @@ a {
 	width: 100%;
 	white-space: pre;
 	text-wrap: wrap;
+	transition: font-size 0.5s ease;
 }
 
 .webConsole-snake {
-
 }
 
 .webConsole-scaleToSquare {
