@@ -189,6 +189,9 @@ function enterCommand({commandString, autoSubmit = false, clear = true, initialD
 
 function keyPressed(){
 	if(activeApp == undefined){
+	    if (event.ctrlKey || event.altKey) {
+	        return;
+	    }
 		switch (event.key){			
 			case 'Enter':
 				processPromptInput();
