@@ -17,7 +17,7 @@ registerCommand('img', {
 		    '<br>Usage: <i>img [options]</i><br>options:'+
 		    '<br>  -w width in characters(default=128)'+
 		    '<br>  -h height in characters (default is derived from width and the images aspect ratio)'+
-		    '<br>  -d display width of the image 1..100 (default=20)'+
+		    '<br>  -d display width of the image 1..100 (default=25)'+
 		    '<br>Example: <i>img -w 64 -d 50</i>'}),
 		noAdditionalParameters: false,
 		structure: [],
@@ -28,7 +28,7 @@ const optionsRegex = /\B-([whd])\s([a-z0-9A-Z]+\b)/g;
 function loadImage(params){
     var width = 64;
     var height;
-    var displayWidth = 20;
+    var displayWidth = 25;
     
     try {
         handleOptions(params);
@@ -96,7 +96,7 @@ function renderImage(file, width, height, displayWidth){
 	function logImg() {
 	    let div = ui.htmlFromString({text: img.getMonochromeString(), container: 'div'});
         div.classList.add('webConsole-img');
-        div.style.fontSize = (1.4 * displayWidth / width) + 'vw';
+        div.style.fontSize = ((1.5 * displayWidth / 100) * document.documentElement.clientWidth / width) + 'px';
         div.style.lineHeight = '1.22';
         log(div);
 	}
