@@ -21,11 +21,11 @@ class ImageProcessor {
 	 * Loads an image from a file, scales it to width and height and does the processing.
 	 * @param {object} param
      * @param {object} param.file - the image file to load
-     * @param {number} [param.width=32] - the target width
+     * @param {number} [param.width=64] - the target width
      * @param {number} [param.height=derived from width and the original aspect ratio] - the target height
      * @param {function} [param.init_cb] - function to call when processing is finished
 	 */
-	constructor({file, width = 32, height, init_cb}){
+	constructor({file, width = 64, height, init_cb}){
 		var canvas = document.createElement('canvas');
 		var ctx = canvas.getContext('2d');
 		this.canvas = canvas;
@@ -36,7 +36,7 @@ class ImageProcessor {
 			const aspectRatio = img.width / img.height;
 			canvas.width = width;
 			if(height == undefined){
-			    canvas.height = Math.round(32 / aspectRatio);
+			    canvas.height = Math.round(width / aspectRatio);
 			} else {
 			    canvas.height = height;
 			}
