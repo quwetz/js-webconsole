@@ -4,7 +4,7 @@ import * as shell from './console.js';
 import * as ui from './ui-elements.js';
 
 // import commands
-import './commands/img.js';
+import './plugins/img.js';
 import './mysite/cv.js';
 
 // import apps

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: plugins/img.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: plugins/img.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @module img
+ * @description A plugin for js-webconsole that adds the ***img*** command. 
+ * ***img*** generates an ASCII Grayscale render of a given image. Everything is done locally, no data is sent anywhere.
+ */
+
+import {registerCommand} from '../commands.js';
+import * as ui from '../ui-elements.js';
+import {ImageProcessor} from './image-processor.js';
+import {log} from '../console.js';
+import {IllegalArgumentsError, ValueError} from '../errors.js';
+
+registerCommand('img', {
+		execute: loadImage,
+		description: 'Loads a local image and converts it to a utf8 text image.',
+		info: ui.htmlFromString({text: 'Everything is done locally - no info is sent anywhere'+
+		    '&lt;br>Usage: &lt;i>img [options]&lt;/i>&lt;br>options:'+
+		    '&lt;br>  -w (number) width in characters (default=128)'+
+		    '&lt;br>  -h (number) height in characters (default is derived from width and the images aspect ratio)'+
+		    '&lt;br>  -d (number) display width of the image 1..100 (default=25)'+
+		    '&lt;br>  -c (number | &lt;i>auto&lt;/i> | &lt;i>original&lt;/i>) contrast adjustment value (default=auto)'+
+		    '&lt;br>      number - a decimal number > 0'+
+		    '&lt;br>      &lt;i>auto&lt;/i> for automatic normalization'+
+		    '&lt;br>      &lt;i>original&lt;/i> for no contrast and brightness adjustment'+
+		    '&lt;br>  -b (number) brightness adjustment value (default=0) - ignored if contrast is set to "auto" or "original"'+		    
+		    '&lt;br>Example: &lt;i>img -w 64 -d 50 -c 0.7 -b 10&lt;/i>'}),
+		noAdditionalParameters: false,
+		structure: [],
+	});
+
+const optionsRegex = /\B-([bcdwh])\s((?:(?:-[0-9])?[a-z0-9A-Z\.]*){1,}\b)/g;
+
+function loadImage(params){
+    var width = 128;
+    var height;
+    var displayWidth = 25;
+    var contrast = 'auto';
+    var brightness = 0;
+    
+    try {
+        handleOptions(params);
+    } catch (e) {
+        if (e instanceof IllegalArgumentsError || e instanceof TypeError || e instanceof ValueError) {
+            log(e.message);
+            return;
+        } else {
+            throw e;
+        }
+    }
+    
+	var input = document.createElement('input');
+	
+	input.type = 'file';
+	input.id = 'image_upload';
+	input.accept = '.jpg, .jpeg, .png';
+	input.addEventListener('change', function(event){
+			renderImage({file: event.target.files[0], width, height, displayWidth, contrast, brightness});
+			event.target.remove();
+		});
+	input.addEventListener('cancel', function(event){
+			log('no image chosen');
+			event.target.remove();
+		});
+	input.classList.add('webConsole-doNotDisplay');
+	document.body.appendChild(input);
+	input.click();
+	
+	function handleOptions(){
+	    var illegals = params.replaceAll(optionsRegex, '').trim();
+	    if (illegals.length != 0){
+	        throw new IllegalArgumentsError('Illegal Arguments: ' + illegals + '\n type help img for information');
+	    }
+	    for (const match of params.matchAll(optionsRegex)) {
+	        var value = match[2];
+	        
+	        // check for type
+	        switch (match[1]) {
+	            case 'w':
+	            case 'h':
+	            case 'd':
+	            case 'b':
+	                if (isNaN(value)) {
+                        throw new IllegalArgumentsError('ERROR: ' + value + ' is not a number!');
+	                }
+	                break;
+	            case 'c':
+	                if (isNaN(value) &amp;&amp; (value != 'auto' &amp;&amp; value != 'original')){
+	                    throw new IllegalArgumentsError('ERROR: ' + value + ' is neither number nor "auto" or "original"');
+	                }
+	                break;
+	        }
+	        switch (match[1]) {
+	            case 'w':
+	                value = Math.floor(Number(value));
+	                if (isNaN(match[2])) {
+                        throw new IllegalArgumentsError('ERROR: ' + match[2] + ' is not a number!');
+                    }
+    	            if (value &lt; 1 || value > 2048) {
+	                    throw new IllegalArgumentsError('ERROR: Number has to be between 1 and 2048 for option w');
+	                }
+                    width = value;
+    	            break;
+	            case 'h':
+	                value = Math.floor(Number(value));
+    	            if (value &lt; 1 || value > 2048) {
+	                    throw new IllegalArgumentsError('ERROR: Number has to be between 1 and 2048 for option h');
+	                }
+	                height = value;
+	                break;
+	            case 'd':
+	                value = Math.floor(Number(value));
+	                if (value > 100) {
+	                    throw new IllegalArgumentsError('ERROR: Number has to be between 1 and 100 for option d' + match[1]);
+	                }
+	                displayWidth = value;
+	                break;
+	            case 'c':
+	                contrast = value;
+	                break;
+	            case 'b':
+	                brightness = value;
+	                break;
+	        }
+	    }
+	}
+}
+
+function renderImage({file, width, height, displayWidth, contrast, brightness}){
+	var img = new ImageProcessor({file, width, height, contrast, brightness, init_cb: logImg});
+	log(`Loading ${ file.name}...`);
+	
+	function logImg() {
+	    let div = ui.htmlFromString({text: img.getMonochromeString(), container: 'div'});
+        div.classList.add('webConsole-img');
+        div.style.fontSize = ((1.5 * displayWidth / 100) * document.documentElement.clientWidth / width) + 'px';
+        div.style.lineHeight = '1.22';
+        log(div);
+	}
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-commands.html">commands</a></li><li><a href="module-console.html">console</a></li><li><a href="module-gestures.html">gestures</a></li><li><a href="module-img.html">img</a></li><li><a href="module-snake.html">snake</a></li><li><a href="module-ui-elements.html">ui-elements</a></li><li><a href="module-util.html">util</a></li></ul><h3>Classes</h3><ul><li><a href="ImageProcessor.html">ImageProcessor</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Tue Mar 11 2025 21:58:47 GMT+0100 (Central European Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -3,6 +3,7 @@
  * @description A module for utility functions
  */
  
+
 /**
  * Splits a given String into an Array at the first occurence of a Space Character.
  * @param {string} str - The String to split.
@@ -59,4 +60,15 @@ export function removeElementsByClass(className) {
     while(elements.length > 0) {
         elements[0].parentNode.removeChild(elements[0]);
     }
+}
+
+/**
+ * Clamps a given value to the range [min..max] (inclusive)
+ * @throws {TypeError} if any parameter can't be converted to a Number.
+ */
+export function clamp(value, min, max){
+    if (Number(value) == NaN) throw new TypeError(`ERROR: ${ value} is not a Number`);
+    if (Number(min) == NaN) throw new TypeError(`ERROR: ${ min} is not a Number`);
+    if (Number(max) == NaN) throw new TypeError(`ERROR: ${ max} is not a Number`);
+    return (Math.min(max, Math.max(min, value)));
 }
