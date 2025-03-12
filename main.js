@@ -6,6 +6,7 @@ import * as ui from './ui-elements.js';
 // import commands
 import './plugins/img.js';
 import './mysite/cv.js';
+import './mysite/aboutMe.js';
 
 // import apps
 //import './apps/minesweeper.js';
