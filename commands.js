@@ -11,7 +11,7 @@
  * @property {boolean} mandatory - Flag if parameter is mandatory
  */
 
-import {log, runApp, enterCommand} from './console.js';
+import {log, runApp, enterCommand, clearLog} from './console.js';
 import * as ui from './ui-elements.js';
 import {createCommandButton as cmdBtn} from './ui-elements.js';
 import * as util from './util.js';
@@ -19,6 +19,13 @@ import * as util from './util.js';
 const colorIdentifiers = ['foreground', 'background', 'link', 'alert'];
 const apps = {};
 const commands = {
+    clear: {
+        execute: clearLog,
+        description: 'Clears the console log.',
+        info: '',
+        noAdditionalParameters: true,
+        structure: [],
+    },
 	home: {
 		execute: home, 
 		description: 'Displays landing page content', 
@@ -190,8 +197,8 @@ function help(params){
 
 function home(){
 	log('Hello and welcome!');
-	log('This website uses a command line interface, this is not a chatbot.');
-	log('To browse this site, just enter a command or click a button.');
+	log('This website uses a command line interface.');
+	log('To browse this site, enter a command or click a button.');
 	log(['Enter or click ', cmdBtn({commandString: 'help', autoSubmit: true}), ' for a list of available commands']);
 	log(['The code used for this UI is open source and available at ', ui.htmlFromString({text: '<a href="https://github.com/quwetz/js-webconsole">github.com/quwetz/js-webconsole</a>', container: 'span'})]);
 }
@@ -281,3 +288,4 @@ function logColorConversionError(){
 	log('Illegal color formatting. Use a valid css color format.');
 	log('Examples: black, rgb(0,0,0) or #000000');
 }
+

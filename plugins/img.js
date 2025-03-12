@@ -42,6 +42,7 @@ function loadImage(params){
     } catch (e) {
         if (e instanceof IllegalArgumentsError || e instanceof TypeError || e instanceof ValueError) {
             log(e.message);
+            log(['For more info see ', ui.createCommandButton({commandString: 'help img', autoSubmit: true})]);
             return;
         } else {
             throw e;
@@ -89,28 +90,29 @@ function loadImage(params){
 	                }
 	                break;
 	        }
+	        
 	        switch (match[1]) {
 	            case 'w':
 	                value = Math.floor(Number(value));
 	                if (isNaN(match[2])) {
-                        throw new IllegalArgumentsError('ERROR: ' + match[2] + ' is not a number!');
+                        throw new ValueError('ERROR: ' + match[2] + ' is not a number!');
                     }
     	            if (value < 1 || value > 2048) {
-	                    throw new IllegalArgumentsError('ERROR: Number has to be between 1 and 2048 for option w');
+	                    throw new ValueError('ERROR: Number has to be between 1 and 2048 for option w');
 	                }
                     width = value;
     	            break;
 	            case 'h':
 	                value = Math.floor(Number(value));
     	            if (value < 1 || value > 2048) {
-	                    throw new IllegalArgumentsError('ERROR: Number has to be between 1 and 2048 for option h');
+	                    throw new ValueError('ERROR: Number has to be between 1 and 2048 for option h');
 	                }
 	                height = value;
 	                break;
 	            case 'd':
 	                value = Math.floor(Number(value));
 	                if (value > 100) {
-	                    throw new IllegalArgumentsError('ERROR: Number has to be between 1 and 100 for option d' + match[1]);
+	                    throw new ValueError('ERROR: Number has to be between 1 and 100 for option d');
 	                }
 	                displayWidth = value;
 	                break;
@@ -132,7 +134,7 @@ function renderImage({file, width, height, displayWidth, contrast, brightness}){
 	function logImg() {
 	    let div = ui.htmlFromString({text: img.getMonochromeString(), container: 'div'});
         div.classList.add('webConsole-img');
-        div.style.fontSize = ((1.5 * displayWidth / 100) * document.documentElement.clientWidth / width) + 'px';
+        div.style.fontSize = ((1.48 * displayWidth / 100) * document.documentElement.clientWidth / width) + 'px';
         div.style.lineHeight = '1.22';
         log(div);
 	}

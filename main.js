@@ -8,12 +8,18 @@ import './plugins/img.js';
 import './mysite/cv.js';
 
 // import apps
-import './apps/minesweeper.js';
+//import './apps/minesweeper.js';
 import './apps/snake.js';
 
 
 var console = shell.init();
 
+document.body.appendChild(ui.createMenuBar([
+        {label: 'info'},
+        {label: 'apps'},
+        {label: 'projects'},
+        {label: 'help'},
+    ]));
 document.body.appendChild(console);
 shell.focusPromptInput();
 

@@ -82,6 +82,36 @@ export function createCommandButton({commandString, autoSubmit = false, clear = 
 }
 
 /**
+ * The Menu Item Object
+ * @typedef MenuItem
+ * @property {string} label
+ * @property {function} cb
+ * @property {Array<MenuItem>} children
+ */
+
+/**
+ * Creates a Menubar on top of the screen
+ * @param {Array<MenuItem>} items - the menu items
+ * @returns {DOM-Element} a DOM Element containing the menu 
+ */
+export function createMenuBar(items){
+    const menu = document.createElement('div');
+    menu.classList.add('webConsole');
+    let line = '';
+    for (const item of items) {
+        const button = document.createElement('span');
+        button.innerText += '│' + item.label + '│'; //┃┗━┛
+        button.classList.add('webConsole-menuButton');
+        button.addEventListener('click', function(e){});
+        menu.appendChild(button);
+        line += '└' + '─'.repeat(item.label.length) + '┘';
+    }
+    menu.appendChild(document.createTextNode('\n' + line));
+    return menu;
+}
+
+
+/**
  * Creates a textBox made from unicode box drawing characters.
  * The text is centered with spaces and empy lines if width/height are larger than line length/number of lines
  * @param {object} param

@@ -18,6 +18,7 @@
 	--foreground-color: lime;
 	--alert-color: red;
 	--link-color: deepskyblue;
+	--input-color: forestgreen;
 	--font-size: clamp(3px, 4.5vw, 20px);
 	--font: 'Fira Code', 'Courier New', monospace;
 }
@@ -153,8 +154,6 @@ option:disabled {
 	left: 0.1ch;
 }
 
-
-
 select.webConsole-autoCompleteHelp, .webConsole-autoCompleteHelp {
 	position: absolute;
 	font-family: inherit;
@@ -178,3 +177,5 @@ select.webConsole-autoCompleteHelp, .webConsole-autoCompleteHelp {
 .webConsole-autoCompleteHelp:hover {
 	opacity: 1.0;
 }
+
+

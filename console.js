@@ -3,7 +3,7 @@
  * @description Manages the conosoles DOM Elements, input and logging to the console
  */
 
-export {init, log, runApp, closeApp, enterCommand, focusPromptInput, processPromptInput, setupPromptCursorForTextInput};
+export {init, log, runApp, closeApp, enterCommand, focusPromptInput, processPromptInput, setupPromptCursorForTextInput, clearLog};
 
 import * as cmd from './commands.js';
 import * as ui from './ui-elements.js';
@@ -57,6 +57,13 @@ function focusPromptInput(){
 }
 
 /**
+ * Clear the console log
+ */
+function clearLog(){
+    logContainer.innerHTML = '';
+}
+
+/**
  * Trims any trailing whitespace characters from the prompt.
  * Then adds a single space if the prompt is not empty.
  * Removes Autocomplete Helper Elements.
@@ -76,7 +83,7 @@ function setupPromptCursorForTextInput(){
 function processPromptInput(){	
 	removeAutoCompleteHelp();
 	let commandString = promptInput.value.trim();
-	log(`> ${ commandString}`);
+	logInput(commandString);
 	commandHistoryIndex = undefined;
 	if(commandString === ''){
 		return;
@@ -215,6 +222,7 @@ function keyPressed(){
 					}
 					event.preventDefault();
 					promptInput.value = commandHistory[commandHistoryIndex];
+					displayAutoCompleteHelp();
 				}
 				break;
 			case 'ArrowDown':
@@ -229,6 +237,7 @@ function keyPressed(){
 						commandHistoryIndex++;
 					}
 					promptInput.value = commandHistory[commandHistoryIndex];
+				    displayAutoCompleteHelp();
 				}
 				break;
 			case 'Escape':
@@ -272,4 +281,11 @@ function removeAutoCompleteHelp(){
 	autoCompleteHelp = undefined;
 	util.removeElementsByClass('webConsole-autoCompleteHelp');
 	optionsIndex = 0;
+}
+
+function logInput(commandString){
+    const msg = `> ${ commandString}`;
+    const div = document.createElement('div');
+    div.innerText = msg;
+    log(div);
 }
