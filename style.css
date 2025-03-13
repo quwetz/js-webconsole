@@ -178,4 +178,10 @@ select.webConsole-autoCompleteHelp, .webConsole-autoCompleteHelp {
 	opacity: 1.0;
 }
 
+.webConsole-menu {
+    position: relative;
+}
 
+.webConsole-menu:hover {
+    cursor: pointer;
+}

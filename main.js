@@ -16,7 +16,7 @@ import './apps/snake.js';
 var console = shell.init();
 
 document.body.appendChild(ui.createMenuBar([
-        {label: 'info'},
+        {label: 'info', children: [{label: 'about'}, {label: 'cv'}, {label: 'contact'}]},
         {label: 'apps'},
         {label: 'projects'},
         {label: 'help'},

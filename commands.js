@@ -40,13 +40,13 @@ const commands = {
 		noAdditionalParameters: false,
 		structure: [{label: 'command', items: undefined, mandatory: false}],
 		},
-	echo: {	
-		execute: log, 
-		description: 'Prints text to the  console',
-		info: ui.htmlFromString({text: 'Usage: <i>echo [text]</i><br>Example: <i>echo hello world</i>'}),
-		noAdditionalParameters: false,
-		structure: [{label: 'text', items: 'text', mandatory: false}],
-		},
+//	echo: {	
+//		execute: log, 
+//		description: 'Prints text to the  console',
+//		info: ui.htmlFromString({text: 'Usage: <i>echo [text]</i><br>Example: <i>echo hello world</i>'}),
+//		noAdditionalParameters: false,
+//		structure: [{label: 'text', items: 'text', mandatory: false}],
+//		},
 	setcolor: {
 		execute: handleColorChange,
 		description: 'Changes the specified color',

@@ -101,13 +101,35 @@ export function createMenuBar(items){
     for (const item of items) {
         const button = document.createElement('span');
         button.innerText += '│' + item.label + '│'; //┃┗━┛
-        button.classList.add('webConsole-menuButton');
-        button.addEventListener('click', function(e){});
+        button.classList.add('webConsole-menu');
+        button.addEventListener('click', (e) => (expandMenu(e.srcElement)));
         menu.appendChild(button);
         line += '└' + '─'.repeat(item.label.length) + '┘';
+        if (item.children != undefined){
+            item.children.forEach(function(c){
+                    const childButton = createCommandButton({commandString: c.label, autoSubmit: true});
+                    childButton.classList.add('webConsole-doNotDisplay'); 
+                    childButton.classList.add('webConsole-menuItem');
+                    button.appendChild(childButton);
+                });
+        }
     }
     menu.appendChild(document.createTextNode('\n' + line));
     return menu;
+    
+    function expandMenu(element){
+        hideOtherExpandedMenus();
+        for (const child of element.children){
+            child.classList.remove('webConsole-doNotDisplay');
+        }
+    }
+
+    function hideOtherExpandedMenus(){
+        const menus = document.getElementsByClassName('webConsole-menuItem');
+        for (const m of menus) {
+            m.classList.add('webConsole-doNotDisplay');
+        }
+    }
 }
 
 
