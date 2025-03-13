@@ -36,17 +36,10 @@ const commands = {
 	help: {
 		execute: help, 
 		description: 'Provides Information about commands', 
-		info: ui.htmlFromString({text: 'Usage: <i>help [command]</i><br>Examples: <i>help fgcolor</i>'}),
+		info: ui.htmlFromString({text: 'Usage: <i>help [command]</i><br>Examples: <i>help setcolor</i>'}),
 		noAdditionalParameters: false,
 		structure: [{label: 'command', items: undefined, mandatory: false}],
 		},
-//	echo: {	
-//		execute: log, 
-//		description: 'Prints text to the  console',
-//		info: ui.htmlFromString({text: 'Usage: <i>echo [text]</i><br>Example: <i>echo hello world</i>'}),
-//		noAdditionalParameters: false,
-//		structure: [{label: 'text', items: 'text', mandatory: false}],
-//		},
 	setcolor: {
 		execute: handleColorChange,
 		description: 'Changes the specified color',
@@ -160,6 +153,20 @@ export function executeCommand(commandString){
 	} else {
 		log('Unknown command: ' + command);
 	}	
+}
+
+/**
+ * @returns {Array<string>} an Array containing the names of all registered Apps.
+ */
+export function getAppNames(){
+    return Object.keys(apps);
+}
+
+/**
+ * @returns {Array<string>} an Array containing the names of all registered Commands.
+ */
+export function getCommandNames(){
+    return Object.keys(commands);
 }
 
 ///////////////////////////////////////////////////////////////////////////////

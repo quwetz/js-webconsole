@@ -18,7 +18,8 @@ var activeApp;
 var autoCompleteHelp;
 var optionsIndex = 0;
 
-document.body.addEventListener('keydown', keyPressed);
+document.addEventListener('keydown', keyPressed);
+document.addEventListener('click', focusPromptInput);
 
 ///////////////////////////////////////////////////////////////////////////////
 ////// Public Methods
@@ -34,6 +35,7 @@ function init(){
 	consoleContainer.classList.add('webConsole');
 
 	logContainer = ui.createConsoleLog();
+	logContainer.classList.add('webConsole-hideWhileAppIsRunning');
 	consoleContainer.appendChild(logContainer);
 
 	let promptLabel = document.createTextNode('>');
@@ -41,6 +43,7 @@ function init(){
 
 	commandPrompt = document.createElement('div');
 	commandPrompt.classList.add('posRelative');
+	commandPrompt.classList.add('webConsole-hideWhileAppIsRunning');
 	commandPrompt.appendChild(promptLabel);
 	commandPrompt.appendChild(promptInput);
 	commandPrompt.appendChild(ui.createSubmitButton(1, 'span')).classList.add('webConsole-promptSubmitButton');
@@ -133,8 +136,10 @@ function log(msg){
  */
 function runApp(startApp, params){
 	if(activeApp == undefined){
-		ui.hide(logContainer);
-		ui.hide(commandPrompt);
+		const elems = document.getElementsByClassName('webConsole-hideWhileAppIsRunning');
+		for (let i = 0; i < elems.length; i++) {
+		     ui.hide(elems[i]);
+		}
 		activeApp = startApp(consoleContainer.appendChild(document.createElement('div')), closeApp, params);
 		return;
 	}
@@ -150,8 +155,10 @@ function runApp(startApp, params){
 function closeApp(targetElement){
 	consoleContainer.removeChild(targetElement);
 	activeApp = undefined;
-	ui.show(logContainer);
-	ui.show(commandPrompt);
+	const elems = document.getElementsByClassName('webConsole-hideWhileAppIsRunning');
+	for (let i = 0; i < elems.length; i++) {
+	     ui.show(elems[i]);
+	}
 }
 
 /**

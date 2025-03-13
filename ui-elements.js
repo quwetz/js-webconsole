@@ -2,7 +2,7 @@
  * @module ui-elements
  * @description provides functions that create ui-elements for js-webconsole
  */
-import {enterCommand, processPromptInput, setupPromptCursorForTextInput} from './console.js';
+import {enterCommand, processPromptInput, setupPromptCursorForTextInput, log} from './console.js';
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -100,32 +100,40 @@ export function createMenuBar(items){
     let line = '';
     for (const item of items) {
         const button = document.createElement('span');
-        button.innerText += '│' + item.label + '│'; //┃┗━┛
+        button.innerText += item.label; //┃┗━┛
         button.classList.add('webConsole-menu');
         button.addEventListener('click', (e) => (expandMenu(e.srcElement)));
         menu.appendChild(button);
-        line += '└' + '─'.repeat(item.label.length) + '┘';
         if (item.children != undefined){
+            const menuOptions = document.createElement('div');
+            menuOptions.classList.add('webConsole-expandedMenu');
+            menuOptions.classList.add('webConsole-doNotDisplay');
             item.children.forEach(function(c){
-                    const childButton = createCommandButton({commandString: c.label, autoSubmit: true});
-                    childButton.classList.add('webConsole-doNotDisplay'); 
-                    childButton.classList.add('webConsole-menuItem');
-                    button.appendChild(childButton);
+                    const option = document.createElement('div');
+                    option.innerText = c.label;
+                    option.classList.add('webConsole-menuOption');
+                    option.addEventListener('click', c.cb);
+                    menuOptions.appendChild(option);
                 });
+            button.appendChild(menuOptions);
         }
     }
-    menu.appendChild(document.createTextNode('\n' + line));
+    document.addEventListener('click', function(e){
+        if (!e.target.classList.contains('webConsole-menu')) {
+            hideExpandedMenus();
+        }
+    });
     return menu;
     
     function expandMenu(element){
-        hideOtherExpandedMenus();
+        hideExpandedMenus();
         for (const child of element.children){
             child.classList.remove('webConsole-doNotDisplay');
         }
     }
 
-    function hideOtherExpandedMenus(){
-        const menus = document.getElementsByClassName('webConsole-menuItem');
+    function hideExpandedMenus(){
+        const menus = document.getElementsByClassName('webConsole-expandedMenu');
         for (const m of menus) {
             m.classList.add('webConsole-doNotDisplay');
         }

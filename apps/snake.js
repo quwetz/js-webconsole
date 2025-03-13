@@ -28,7 +28,8 @@ function newGame(targetElement, close_cb, params){
 	var closeFunction = close_cb;
 	
 	var width = 32;
-	var height = 16;
+	var height = 32;
+	var difficulty = 'normal';
 	
 	var playerX = 0;
 	var playerY = 0;
@@ -243,13 +244,17 @@ function newGame(targetElement, close_cb, params){
 
 	function checkCollisions(){
 		if(tailBitten()){
-			gameOver = true;
-			clearInterval(intervalID);
-			showGameOverBanner();
-		}
+		    endGame();
+  		}
 		if(playerX == appleX && playerY == appleY){
 			eatApple();
 		}
+	}
+	
+	function endGame(){
+		gameOver = true;
+		clearInterval(intervalID);
+		showGameOverBanner();
 	}
 	
 	function showGameOverBanner(){
@@ -271,9 +276,15 @@ function newGame(targetElement, close_cb, params){
 	function movePlayer(){
 		updateTail();
 		playerX += velocityX;
-		playerX = (playerX + width) % width;
 		playerY += velocityY;
-		playerY = (playerY + height) % height;
+		if(difficulty == 'easy') {
+		    playerX = (playerX + width) % width;
+		    playerY = (playerY + height) % height;
+		} else {
+		    if (playerX < 0 || playerX >= width || playerY < 0 || playerY >= height) {
+		        endGame();
+		    }
+		}
 		field[playerY][playerX].setTile(tiles.head);
 		checkCollisions();
 	}

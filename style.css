@@ -180,8 +180,36 @@ select.webConsole-autoCompleteHelp, .webConsole-autoCompleteHelp {
 
 .webConsole-menu {
     position: relative;
+	   margin: 0.1em;
+	padding: 0.1em;
+	height: auto;
+	 border-left: 0.1em solid var(--foreground-color);
+	border-right: 0.1em solid var(--foreground-color);
+	border-bottom: 0.1em solid var(--foreground-color);
 }
 
 .webConsole-menu:hover {
     cursor: pointer;
+}
+
+.webConsole-menuOption {
+}
+
+.webConsole-expandedMenu {
+	background-color: black;
+	position: absolute;
+	left: -0.092em;
+	top: 1.45em;
+	line-height: 1.4em;
+	padding: 0.2em;
+	border: 0.1em solid var(--foreground-color);
+}
+
+.webConsole-header {
+	z-index: 1;
+	position: sticky;
+	top: 0em;
+	padding-top: 0.2em;
+	height: 1.5em;
+	background-color: var(--background-color);
 }
