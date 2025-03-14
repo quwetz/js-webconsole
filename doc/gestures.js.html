@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: gestures.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: gestures.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @module gestures
+ * @description A module for detecting touch gestures on a DOM element.
+ */
+
+/**
+ * @typedef {Object} Gestures
+ * @name Gestures
+ * @property {Array&lt;function>} strokeUp - Functions to call for "stroke up" gestures.
+ * @property {Array&lt;function>} strokeRight - Functions to call for "stroke right" gestures.
+ * @property {Array&lt;function>} strokeDown - Functions to call for "stroke down" gestures.
+ * @property {Array&lt;function>} strokeLeft - Functions to call for "stroke left" gestures.
+ */
+
+/**
+ * @typedef {Object} GesturesAPI
+ * @name GesturesAPI
+ * @property {function} subscribe - Registers a callback for a gesture.
+ * @property {function} unsubscribe - Unregisters a callback for a gesture.
+ */
+
+/**
+ * Initializes gesture detection on a DOM element.
+ * @param {HTMLElement} el - The DOM element to monitor for touch gestures.
+ * @returns {GesturesAPI} An API object for subscribing/unsubscribing to gestures.
+ */
+export function init(el){     
+    el.addEventListener("touchstart", handleStart);
+    el.addEventListener("touchend", handleEnd);
+    el.addEventListener("touchcancel", handleCancel);
+    el.addEventListener("touchmove", handleMove); 
+  
+    /** @type {Gestures} */    
+    const gestures = {
+        strokeUp: [],
+        strokeRight: [],
+        strokeDown: [],
+        strokeLeft: [],
+    };
+    
+    
+    /** @type {GesturesAPI} */
+    const api = {
+        subscribe,
+        unsubscribe,
+    };
+    const ongoingTouches = new Map();
+    
+    return api;
+
+    /**
+     * Registers a callback for a gesture.
+     * @name subscribe
+     * @method subscribe
+     * @param {string} gesture - The gesture type (e.g., "strokeUp").
+     * @param {function} func - The callback function.
+     * @throws {Error} If the gesture is invalid.
+     */
+    function subscribe(gesture, func) {
+        gestures[gesture].push(func);
+    }
+    
+    /**
+     * Unregisters a callback for a gesture.
+     * @function unsubscribe
+     * @param {string} gesture - The gesture type (e.g., "strokeUp").
+     * @param {function} func - The callback function to remove.
+     * @throws {Error} If the gesture is invalid or the function is not registered.
+     */
+    function unsubscribe(gesture, func) {
+        if (!gesture in gestures){
+            throw new Error(gesture + ' is not a valid gesture.')
+        }
+        var index = gestures[gesture].indexOf(func);
+        if (index == -1) {
+            throw new Error('Function is not registered.');
+        }
+        gestures[gesture].splice(index, 1);
+    }
+
+    /////////////////////
+    // private methods
+    ////////////////////
+    
+    function handleStart(evt) {
+        const touches = evt.changedTouches;
+        for(let i = 0; i &lt; touches.length; i++){
+            ongoingTouches.set(touches[i].identifier, {x: touches[i].screenX, y: touches[i].screenY,});
+        }
+    }
+    
+    function handleEnd(evt) {
+        const touches = evt.changedTouches;
+        for(let i = 0; i &lt; touches.length; i++){
+            const id = touches[i].identifier;
+            const totalAngle = Math.atan2(
+                touches[i].screenY - ongoingTouches.get(id).y, 
+                touches[i].screenX - ongoingTouches.get(id).x
+                );
+            ongoingTouches.delete[id];
+            detectStroke(totalAngle);
+        }
+    } 
+    
+    function handleCancel(evt) {
+        const touches = evt.changedTouches;
+        for(let i = 0; i &lt; touches.length; i++){
+            const id = touches[i].identifier;
+            ongoingTouches.delete[id];
+        }        
+    }
+    
+    function handleMove(evt) {
+    }
+    
+    function detectStroke(angle){
+        // Note the inverted y axis on screen coordinates
+        if (Math.abs(angle) &lt; Math.PI * 0.2) {
+            gestures.strokeRight.forEach(fn => fn());
+        } else if (Math.abs(angle) > Math.PI * 0.8) {
+            gestures.strokeLeft.forEach(fn => fn());
+        } else if (Math.PI * 0.3 &lt; angle &amp;&amp; angle &lt; Math.PI * 0.7) {
+            gestures.strokeDown.forEach(fn => fn());
+        } else if (Math.PI * -0.7 &lt; angle &amp;&amp; angle &lt; Math.PI * -0.3) {
+            gestures.strokeUp.forEach(fn => fn());
+        }
+    }
+}
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-commands.html">commands</a></li><li><a href="module-console.html">console</a></li><li><a href="module-gestures.html">gestures</a></li><li><a href="module-img.html">img</a></li><li><a href="module-snake.html">snake</a></li><li><a href="module-ui-elements.html">ui-elements</a></li><li><a href="module-util.html">util</a></li></ul><h3>Classes</h3><ul><li><a href="ImageProcessor.html">ImageProcessor</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Fri Mar 14 2025 12:58:37 GMT+0100 (Central European Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

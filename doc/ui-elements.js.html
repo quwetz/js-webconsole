@@ -1,9 +1,36 @@
-/**
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: ui-elements.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: ui-elements.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
  * @module ui-elements
  * @description provides functions that create ui-elements for js-webconsole
  */
 import {enterCommand, processPromptInput, setupPromptCursorForTextInput, log} from './console.js';
-import {ValueError} from './errors.js';
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -87,38 +114,29 @@ export function createCommandButton({commandString, autoSubmit = false, clear = 
  * @typedef MenuItem
  * @property {string} label
  * @property {function} cb
- * @property {Array<MenuItem>} children
+ * @property {Array&lt;MenuItem>} children
  */
 
 /**
- * Creates a Menubar on top of the screen.
- * The Menu contains all items as tabs and their children as Buttons in a drop down menu on click.
- * If children of an item from items is undefined, the tab justs executes this item's cb on click.
- * Children of Children of items are ignored.
- * @param {Array<MenuItem>} items - the menu items
+ * Creates a Menubar on top of the screen
+ * @param {Array&lt;MenuItem>} items - the menu items
  * @returns {DOM-Element} a DOM Element containing the menu 
- * @throws {ValueError} a ValueError if items does not have the necessary structure as described above.
  */
 export function createMenuBar(items){
     const menu = document.createElement('div');
     menu.classList.add('webConsole');
     let line = '';
     for (const item of items) {
-        if ((typeof item.cb != 'function') && (item.children == undefined)) {
-            throw new ValueError('ERROR: Each Member of items needs to have either a valid cb or children.');
-        }
         const button = document.createElement('span');
-        button.innerText += item.label;
+        button.innerText += item.label; //┃┗━┛
         button.classList.add('webConsole-menu');
         menu.appendChild(button);
         if (item.children != undefined){
-            if(!Array.isArray(item.children)) throw new ValueError(`ERROR: children of ${ item} is not an Array`);
             button.addEventListener('click', (e) => (expandMenu(e.srcElement)));
             const menuOptions = document.createElement('div');
             menuOptions.classList.add('webConsole-expandedMenu');
             menuOptions.classList.add('webConsole-doNotDisplay');
             item.children.forEach(function(c){
-                    if(typeof c.cb != 'function') throw new ValueError(`ERROR: cb of ${ c} is not a function`);
                     const option = document.createElement('div');
                     option.innerText = c.label;
                     option.classList.add('webConsole-menuOption');
@@ -165,26 +183,26 @@ export function createMenuBar(items){
 export function createTextBox({text, width = 0, height = 0}){
 	var textBox = document.createElement('span');
 	var lines = text.trim().split('\n');
-	if (width < 2) {
+	if (width &lt; 2) {
 		width = 2 + maxLineLength(lines);
 	}
-	if (height < 2) {
+	if (height &lt; 2) {
 		height = 2 + lines.length;
 	}
 	textBox.style.width = `${ width}ch`;
 	textBox.style.height = `${ height}em`;
 	textBox.style.lineHeight = '1em';
-	textBox.innerHTML = '╔' + '═'.repeat(width - 2) + '╗<br />';
+	textBox.innerHTML = '╔' + '═'.repeat(width - 2) + '╗&lt;br />';
 	
 	let n_emptyLines = Math.floor((height - lines.length - 2) / 2);
-	for(let i = 0; i < n_emptyLines; i++){
-		textBox.innerHTML += '║' + '&nbsp;'.repeat(width - 2) + '║<br />';
+	for(let i = 0; i &lt; n_emptyLines; i++){
+		textBox.innerHTML += '║' + '&amp;nbsp;'.repeat(width - 2) + '║&lt;br />';
 	}
-	for(let i = 0; i < Math.min(height - 2, lines.length); i++){
-		textBox.innerHTML += '║' + centerString(lines[i].substr(0, width - 2), width - 2) + '║<br />';
+	for(let i = 0; i &lt; Math.min(height - 2, lines.length); i++){
+		textBox.innerHTML += '║' + centerString(lines[i].substr(0, width - 2), width - 2) + '║&lt;br />';
 	}
-	for(let i = 0; i < Math.ceil(n_emptyLines); i++){
-		textBox.innerHTML += '║' + '&nbsp;'.repeat(width - 2) + '║<br />';
+	for(let i = 0; i &lt; Math.ceil(n_emptyLines); i++){
+		textBox.innerHTML += '║' + '&amp;nbsp;'.repeat(width - 2) + '║&lt;br />';
 	}
 	textBox.innerHTML += '╚' + '═'.repeat(width - 2) + '╝';
 	return textBox;
@@ -303,10 +321,33 @@ function createParameterDropDown(param){
 }
 
 function centerString(s, length){
-	if (s.length < length){
+	if (s.length &lt; length){
 		let diff = length - s.length;
-		s = '&nbsp;'.repeat(diff/2) + s + '&nbsp;'.repeat(Math.ceil(diff/2));
+		s = '&amp;nbsp;'.repeat(diff/2) + s + '&amp;nbsp;'.repeat(Math.ceil(diff/2));
 	}
 	return s;
 }
 
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-commands.html">commands</a></li><li><a href="module-console.html">console</a></li><li><a href="module-gestures.html">gestures</a></li><li><a href="module-img.html">img</a></li><li><a href="module-snake.html">snake</a></li><li><a href="module-ui-elements.html">ui-elements</a></li><li><a href="module-util.html">util</a></li></ul><h3>Classes</h3><ul><li><a href="ImageProcessor.html">ImageProcessor</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Fri Mar 14 2025 12:58:37 GMT+0100 (Central European Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
