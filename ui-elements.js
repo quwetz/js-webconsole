@@ -102,9 +102,9 @@ export function createMenuBar(items){
         const button = document.createElement('span');
         button.innerText += item.label; //┃┗━┛
         button.classList.add('webConsole-menu');
-        button.addEventListener('click', (e) => (expandMenu(e.srcElement)));
         menu.appendChild(button);
         if (item.children != undefined){
+            button.addEventListener('click', (e) => (expandMenu(e.srcElement)));
             const menuOptions = document.createElement('div');
             menuOptions.classList.add('webConsole-expandedMenu');
             menuOptions.classList.add('webConsole-doNotDisplay');
@@ -116,6 +116,8 @@ export function createMenuBar(items){
                     menuOptions.appendChild(option);
                 });
             button.appendChild(menuOptions);
+        } else {
+            button.addEventListener('click', item.cb);
         }
     }
     document.addEventListener('click', function(e){

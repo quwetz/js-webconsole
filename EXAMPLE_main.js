@@ -4,11 +4,8 @@ import {getAppNames, getCommandNames} from './commands.js';
 
 // import commands
 import './plugins/img.js';
-import './mysite/cv.js';
-import './mysite/aboutMe.js';
 
 // import apps
-//import './apps/minesweeper.js';
 import './apps/snake.js';
 
 
@@ -34,21 +31,16 @@ function createMenu(){
     menu.classList.add('webConsole-hideWhileAppIsRunning');
     
     const menuObjects = [
-        {label: 'info', children: [
-            {label: 'about', cb: commandCB('about')}, 
-            {label: 'cv', cb: commandCB('cv')}, 
-            {label: 'contact', cb: commandCB('contact')},
-            ]},
+        {label: 'home', cb: commandCB('home')},
         {label: 'run'},
-        {label: 'projects'},
         {label: 'help'},
     ];
     
     menuObjects[1].children = [];
     getAppNames().forEach((app) => (menuObjects[1].children.push({label: app, cb: commandCB('run ' + app)})));
     
-    menuObjects[3].children = [{label: 'general', cb: commandCB('help')}];
-    getCommandNames().forEach((cmd) => (menuObjects[3].children.push({label: cmd, cb: commandCB('help ' + cmd)})));
+    menuObjects[2].children = [{label: 'general', cb: commandCB('help')}];
+    getCommandNames().forEach((cmd) => (menuObjects[2].children.push({label: cmd, cb: commandCB('help ' + cmd)})));
     
     menu.appendChild(ui.createMenuBar(menuObjects));
     document.body.appendChild(menu);

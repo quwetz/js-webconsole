@@ -1,3 +1,5 @@
 mysite/
 .jsdoc
 .genDoc.sh
+index.html
+main.js
