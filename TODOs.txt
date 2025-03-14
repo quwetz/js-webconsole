@@ -1,2 +1,0 @@
-Colorthemes
-configurations lokal speichern
