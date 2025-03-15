@@ -31,6 +31,8 @@ function newGame(targetElement, close_cb, params){
 	var height = 32;
 	var difficulty = 'normal';
 	
+	var playerX, playerY, velocityX, velocityY, appleX, appleY, tail, length, inputQueue, fps, intervalID, paused, gameOver, field;
+	
 	var playerX = 0;
 	var playerY = 0;
 	var velocityX = 1;
@@ -48,8 +50,16 @@ function newGame(targetElement, close_cb, params){
 		apple: '¤',
 	}
 	
-	var pauseTextBox = ui.createTextBox({text: 'Game paused'});
-	ui.hide(pauseTextBox);
+	const pauseTextBox = ui.createTextBox({text: 'Game paused'});
+	pauseTextBox.classList.add('webConsole-floatingBanner');
+	displayElement.appendChild(pauseTextBox);
+	const gameOverBanner = createGameOverBanner();
+	displayElement.appendChild(gameOverBanner);
+	gameOverBanner.addEventListener('click', restart);
+//	const newGameButton = ui.createButton({text: 'restart', action: restart});;
+//    newGameButton.classList.add('webConsole-floatingBanner');
+//    newGameButton.style = 'top: 4em; width: 6em;';
+//    displayElement.appendChild(newGameButton);
 	
 	var score = (function(){
 		const element = document.createElement('span');
@@ -60,7 +70,9 @@ function newGame(targetElement, close_cb, params){
 	    backButton.classList.add('posAbsolute');
 	    backButton.style = 'top: 0.85em';
 	    element.appendChild(backButton);
-        element.appendChild(text);
+        
+        element.appendChild(text); 
+	    
 	    
 		var points = 0;
 		increase(0);
@@ -69,6 +81,7 @@ function newGame(targetElement, close_cb, params){
 			points,
 			element,
 			increase,
+			reset,
 			};
 		
 		function increase(increment){
@@ -79,20 +92,42 @@ function newGame(targetElement, close_cb, params){
 				str = str.substring(0, str.length - n_digits) + points;
 				text.innerText = str;
 		}
+		function reset(score) {
+		    increase(0 - points);
+		}
 	})();
 	
-	var field = initField();
-	placeApple();
-	
-	var fps = 15;
-	var intervalID = setInterval(update, 1000/fps);
-	var paused = false;
-	var gameOver = false;
-	
+    field = initField();
+    init();    
+    	
 	return {
 		keyPressed,
 	};
 	
+	function init(){
+		initValues(); 
+		clearField();   
+	    placeApple();
+	    ui.hide(gameOverBanner);
+	    ui.hide(pauseTextBox);
+//	    ui.hide(newGameButton);
+	}
+	
+	function initValues(){
+	    playerX = 0;
+	    playerY = 0;
+	    velocityX = 1;
+	    velocityY = 0;
+	    appleX;
+	    appleY;
+	    tail = [];
+	    length = 3;
+	    inputQueue = []; // process only one keystroke per gameUpdate to prevent >=180° turning in one frame
+	    fps = 15;
+	    intervalID = setInterval(update, 1000/fps);
+	    paused = false;
+	    gameOver = false;
+	}
 	
 	function initField(){
 		disableScrolling();
@@ -133,8 +168,6 @@ function newGame(targetElement, close_cb, params){
 		}
 		displayElement.appendChild(document.createTextNode('╚' + '═'.repeat(width) + '╝'));
 		displayElement.appendChild(document.createElement('br'));
-		displayElement.appendChild(pauseTextBox);
-		pauseTextBox.classList.add('webConsole-floatingBanner');
 		
 		return f;
 	}
@@ -191,6 +224,10 @@ function newGame(targetElement, close_cb, params){
 					inputQueue.push(event.key);
 				}
 				break;
+			default:
+			    if (gameOver) {
+			        restart();
+			    }
 		}
 	}
 	
@@ -254,12 +291,14 @@ function newGame(targetElement, close_cb, params){
 	function endGame(){
 		gameOver = true;
 		clearInterval(intervalID);
-		showGameOverBanner();
+		ui.show(gameOverBanner);
+//		ui.show(newGameButton);
 	}
 	
-	function showGameOverBanner(){
-		var banner = displayElement.appendChild(ui.createTextBox({text: 'GAME OVER'}));
+	function createGameOverBanner(){
+		var banner = ui.createTextBox({text: 'GAME OVER'});
 		banner.classList.add('webConsole-floatingBanner');
+		return banner;
 	}
 	
 	function eatApple(){
@@ -283,6 +322,7 @@ function newGame(targetElement, close_cb, params){
 		} else {
 		    if (playerX < 0 || playerX >= width || playerY < 0 || playerY >= height) {
 		        endGame();
+		        return;
 		    }
 		}
 		field[playerY][playerX].setTile(tiles.head);
@@ -296,5 +336,18 @@ function newGame(targetElement, close_cb, params){
 			let end = tail.shift();
 			field[end.y][end.x].setTile(tiles.empty);
 		}
+	}
+	
+	function clearField(){
+	    for (let y = 0; y < height; y++) {
+	        for (let x = 0; x < width; x++) {
+	            field[y][x].setTile(tiles.empty);
+	        }
+	    }
+	}
+	
+	function restart(){
+    	init();
+        score.reset();
 	}
 }

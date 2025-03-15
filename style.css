@@ -77,6 +77,7 @@ a {
 }
 
 .webConsole-floatingBanner {
+    z-index: 10;
 	margin: auto;
 	position: absolute;
 	top: 0px;
