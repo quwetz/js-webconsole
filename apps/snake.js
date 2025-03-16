@@ -56,11 +56,7 @@ function newGame(targetElement, close_cb, params){
 	const gameOverBanner = createGameOverBanner();
 	displayElement.appendChild(gameOverBanner);
 	gameOverBanner.addEventListener('click', restart);
-//	const newGameButton = ui.createButton({text: 'restart', action: restart});;
-//    newGameButton.classList.add('webConsole-floatingBanner');
-//    newGameButton.style = 'top: 4em; width: 6em;';
-//    displayElement.appendChild(newGameButton);
-	
+
 	var score = (function(){
 		const element = document.createElement('span');
 		const text = document.createElement('pre');
@@ -110,7 +106,6 @@ function newGame(targetElement, close_cb, params){
 	    placeApple();
 	    ui.hide(gameOverBanner);
 	    ui.hide(pauseTextBox);
-//	    ui.hide(newGameButton);
 	}
 	
 	function initValues(){
@@ -292,7 +287,6 @@ function newGame(targetElement, close_cb, params){
 		gameOver = true;
 		clearInterval(intervalID);
 		ui.show(gameOverBanner);
-//		ui.show(newGameButton);
 	}
 	
 	function createGameOverBanner(){

@@ -18,7 +18,7 @@ registerCommand('img', {
 		    '<br>  -w (number) width in characters (default=128)'+
 		    '<br>  -h (number) height in characters (default is derived from width and the images aspect ratio)'+
 		    '<br>  -d (number) display width of the image 1..100 (default=25)'+
-		    '<br>  -c (number | <i>auto</i> | <i>original</i>) contrast adjustment value (default=auto)'+
+		    '<br>  -c (number | <i>auto</i> | <i>original</i>) contrast adjustment value (default=original)'+
 		    '<br>      number - a decimal number > 0'+
 		    '<br>      <i>auto</i> for automatic normalization'+
 		    '<br>      <i>original</i> for no contrast and brightness adjustment'+
@@ -34,7 +34,7 @@ function loadImage(params){
     var width = 128;
     var height;
     var displayWidth = 25;
-    var contrast = 'auto';
+    var contrast = 'original';
     var brightness = 0;
     
     try {

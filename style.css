@@ -40,7 +40,6 @@ body {
 	background-color: var(--background-color);
 	font-size: var(--font-size);
 	color: var(--foreground-color);
-	line-height: 1em;
 	transition: font-size 0.5s ease;
 }
 
@@ -127,6 +126,7 @@ a {
 }
 
 .webConsole-snake {
+    line-height: 1em;
 }
 
 .webConsole-scaleToSquare {
@@ -212,7 +212,6 @@ select.webConsole-autoCompleteHelp, .webConsole-autoCompleteHelp {
 	position: absolute;
 	left: -0.092em;
 	top: 1.45em;
-	line-height: 1.4em;
 	padding: 0.2em;
 	border: 0.1em solid var(--foreground-color);
 }
