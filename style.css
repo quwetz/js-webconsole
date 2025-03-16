@@ -12,6 +12,17 @@
 	padding: 5px;
 }
 
+.webConsole h1 {
+	font-size: 150%;
+}
+
+.webConsole h2 {
+	font-size: 130%;
+}
+
+.whiteSpaceNormal {
+    white-space: normal;
+}
 
 :root{
 	--background-color: #131313;

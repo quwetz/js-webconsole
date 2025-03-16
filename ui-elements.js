@@ -215,8 +215,11 @@ export function show(uiElement) {
  * @param {string} [param.container=div] - the html element type
  * @returns {DOM-Element} the DOM Element
  */
-export function htmlFromString({text: s, container = 'div'}){
+export function htmlFromString({text: s, container = 'div', classList}){
 	var e = document.createElement(container);
+	if (classList != undefined) {
+	    e.classList.add(classList);
+	}
 	e.innerHTML = s;
 	return e;
 }
