@@ -238,7 +238,7 @@ function startApp(params){
 	}
 	var [app, appParams] = util.splitAtFirstSpace(params);
 	if(Object.keys(apps).includes(app)){
-		runApp(apps[app].startApp, appParams);
+		runApp({startFunction: apps[app].startApp, params: appParams});
 		return;
 	}
 	log('Unknown app: ' + app);

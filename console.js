@@ -10,7 +10,7 @@ import * as ui from './ui-elements.js';
 import * as util from './util.js';
 
 // DOM Elements
-var consoleContainer, logContainer, commandPrompt, promptInput;
+var consoleContainer, logContainer, commandPrompt, promptInput, appContainer;
 
 var commandHistory = [];
 var commandHistoryIndex;
@@ -48,6 +48,10 @@ function init(){
 	commandPrompt.appendChild(promptInput);
 	commandPrompt.appendChild(ui.createSubmitButton(1, 'span')).classList.add('webConsole-promptSubmitButton');
 	consoleContainer.appendChild(commandPrompt);
+	
+	appContainer = document.createElement('div');
+	appContainer.id = 'webConsole-app';
+	consoleContainer.appendChild(appContainer);
 	
 	return consoleContainer;
 }
@@ -126,21 +130,24 @@ function log(msg){
 }
 
 /**
- * Starts a new app in the console. Hides the log and command prompt. All input after calling this method will be passed to the app until closeApp() is called.
- * @param {function} startApp - the apps start function. startApp is called with these parameters: 
+ * Starts a new app in the console. Hides the log and command prompt (and everything else with the css class 'webConsole-hideWhileAppIsRunning'). 
+ * No key strokes after calling this method will be handled by the console until closeApp() is called.
+ * @param {object} params
+ * @param {function} param.startFunction - the apps start function. the start Function is called with these parameters:
  *   1. DOM-Element to render the app to
  *   2. closeApp callback function
  *   3. params 
- * @param {string} params - parameter string passed to the app
+ * @param {string} params.params - parameterstring that is passed to the startFunction
  * @throws {Error} if there is already an app running.  
  */
-function runApp(startApp, params){
+function runApp({startFunction, params}){
 	if(activeApp == undefined){
 		const elems = document.getElementsByClassName('webConsole-hideWhileAppIsRunning');
 		for (let i = 0; i < elems.length; i++) {
 		     ui.hide(elems[i]);
 		}
-		activeApp = startApp(consoleContainer.appendChild(document.createElement('div')), closeApp, params);
+		activeApp = {domElement: appContainer.appendChild(document.createElement('div'))};
+		startFunction(activeApp.domElement, closeApp, params);
 		return;
 	}
 	throw new Error('There is already an App running');
@@ -150,10 +157,9 @@ function runApp(startApp, params){
  * Cleanup callback for apps to call when they close.
  * Makes the log and commandPrompt visible, removes the Apps DOM-Element from the document.
  * After calling closeApp all input is processed by the console until a new app is started with runApp().
- * @param {DOM-Element} targetElement - the DOM-Element the app uses for rendering itself.
  */
-function closeApp(targetElement){
-	consoleContainer.removeChild(targetElement);
+function closeApp(){
+	appContainer.replaceChildren();
 	activeApp = undefined;
 	const elems = document.getElementsByClassName('webConsole-hideWhileAppIsRunning');
 	for (let i = 0; i < elems.length; i++) {
@@ -203,7 +209,7 @@ function enterCommand({commandString, autoSubmit = false, clear = true, initialD
 
 function keyPressed(){
 	if(activeApp == undefined){
-	    if (event.ctrlKey || event.altKey) {
+	    if (event.ctrlKey || event.altKey || event.shiftKey) {
 	        return;
 	    }
 		switch (event.key){			
@@ -259,7 +265,6 @@ function keyPressed(){
 		}
 		return;
 	}
-	activeApp.keyPressed();
 }
 
 function nextOption(){

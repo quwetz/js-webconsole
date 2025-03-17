@@ -40,7 +40,7 @@ registerApp({name: 'snake', startApp: newGame, info: 'TODO: insert info about sn
 function newGame(targetElement, close_cb, params){
     
     const prevFontSize = window.getComputedStyle(document.documentElement).getPropertyValue('--font-size');
-    document.documentElement.style.setProperty('--font-size', 'clamp(3px, 2.6vw, 20px)');
+    targetElement.style.setProperty('--font-size', 'clamp(3px, 2.6vw, 20px)');
     
 	var touch = gestures.init(window);
     touch.subscribe('strokeRight', () => (inputQueue.push('ArrowRight')));
@@ -48,16 +48,19 @@ function newGame(targetElement, close_cb, params){
     touch.subscribe('strokeLeft', () => (inputQueue.push('ArrowLeft')));
     touch.subscribe('strokeUp', () => (inputQueue.push('ArrowUp')));    
     
+    document.addEventListener('keydown', keyPressed);
     
 	var displayElement = targetElement;
 	displayElement.classList.add('posRelative');
 	displayElement.classList.add('webConsole-snake');
 
-	var closeFunction = close_cb;
+	var cleanup_cb = close_cb;
 	
 	var width = 32;
 	var height = 32;
 	var difficulty = 'normal';
+	
+	var playerX, playerY, velocityX, velocityY, appleX, appleY, tail, length, inputQueue, fps, intervalID, paused, gameOver, field;
 	
 	var playerX = 0;
 	var playerY = 0;
@@ -76,9 +79,13 @@ function newGame(targetElement, close_cb, params){
 		apple: '¤',
 	}
 	
-	var pauseTextBox = ui.createTextBox({text: 'Game paused'});
-	ui.hide(pauseTextBox);
-	
+	const pauseTextBox = ui.createTextBox({text: 'Game paused'});
+	pauseTextBox.classList.add('webConsole-floatingBanner');
+	displayElement.appendChild(pauseTextBox);
+	const gameOverBanner = createGameOverBanner();
+	displayElement.appendChild(gameOverBanner);
+	gameOverBanner.addEventListener('click', restart);
+
 	var score = (function(){
 		const element = document.createElement('span');
 		const text = document.createElement('pre');
@@ -88,7 +95,9 @@ function newGame(targetElement, close_cb, params){
 	    backButton.classList.add('posAbsolute');
 	    backButton.style = 'top: 0.85em';
 	    element.appendChild(backButton);
-        element.appendChild(text);
+        
+        element.appendChild(text); 
+	    
 	    
 		var points = 0;
 		increase(0);
@@ -97,6 +106,7 @@ function newGame(targetElement, close_cb, params){
 			points,
 			element,
 			increase,
+			reset,
 			};
 		
 		function increase(increment){
@@ -107,20 +117,39 @@ function newGame(targetElement, close_cb, params){
 				str = str.substring(0, str.length - n_digits) + points;
 				text.innerText = str;
 		}
+		function reset(score) {
+		    increase(0 - points);
+		}
 	})();
 	
-	var field = initField();
-	placeApple();
+    field = initField();
+    init();    
+    	
+	return;
 	
-	var fps = 15;
-	var intervalID = setInterval(update, 1000/fps);
-	var paused = false;
-	var gameOver = false;
+	function init(){
+		initValues(); 
+		clearField();   
+	    placeApple();
+	    ui.hide(gameOverBanner);
+	    ui.hide(pauseTextBox);
+	}
 	
-	return {
-		keyPressed,
-	};
-	
+	function initValues(){
+	    playerX = 0;
+	    playerY = 0;
+	    velocityX = 1;
+	    velocityY = 0;
+	    appleX;
+	    appleY;
+	    tail = [];
+	    length = 3;
+	    inputQueue = []; // process only one keystroke per gameUpdate to prevent >=180° turning in one frame
+	    fps = 15;
+	    intervalID = setInterval(update, 1000/fps);
+	    paused = false;
+	    gameOver = false;
+	}
 	
 	function initField(){
 		disableScrolling();
@@ -161,8 +190,6 @@ function newGame(targetElement, close_cb, params){
 		}
 		displayElement.appendChild(document.createTextNode('╚' + '═'.repeat(width) + '╝'));
 		displayElement.appendChild(document.createElement('br'));
-		displayElement.appendChild(pauseTextBox);
-		pauseTextBox.classList.add('webConsole-floatingBanner');
 		
 		return f;
 	}
@@ -180,10 +207,9 @@ function newGame(targetElement, close_cb, params){
 	}
 	
 	function quit(){
-		console.log('quit called');
 		enableScrolling();
         document.documentElement.style.setProperty('--font-size', prevFontSize);
-		closeFunction(targetElement);
+		cleanup_cb();
 	}
 	
 	function disableScrolling(){
@@ -219,6 +245,10 @@ function newGame(targetElement, close_cb, params){
 					inputQueue.push(event.key);
 				}
 				break;
+			default:
+			    if (gameOver) {
+			        restart();
+			    }
 		}
 	}
 	
@@ -282,12 +312,13 @@ function newGame(targetElement, close_cb, params){
 	function endGame(){
 		gameOver = true;
 		clearInterval(intervalID);
-		showGameOverBanner();
+		ui.show(gameOverBanner);
 	}
 	
-	function showGameOverBanner(){
-		var banner = displayElement.appendChild(ui.createTextBox({text: 'GAME OVER'}));
+	function createGameOverBanner(){
+		var banner = ui.createTextBox({text: 'GAME OVER'});
 		banner.classList.add('webConsole-floatingBanner');
+		return banner;
 	}
 	
 	function eatApple(){
@@ -311,6 +342,7 @@ function newGame(targetElement, close_cb, params){
 		} else {
 		    if (playerX &lt; 0 || playerX >= width || playerY &lt; 0 || playerY >= height) {
 		        endGame();
+		        return;
 		    }
 		}
 		field[playerY][playerX].setTile(tiles.head);
@@ -324,6 +356,19 @@ function newGame(targetElement, close_cb, params){
 			let end = tail.shift();
 			field[end.y][end.x].setTile(tiles.empty);
 		}
+	}
+	
+	function clearField(){
+	    for (let y = 0; y &lt; height; y++) {
+	        for (let x = 0; x &lt; width; x++) {
+	            field[y][x].setTile(tiles.empty);
+	        }
+	    }
+	}
+	
+	function restart(){
+    	init();
+        score.reset();
 	}
 }
 </code></pre>
@@ -342,7 +387,7 @@ function newGame(targetElement, close_cb, params){
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sat Mar 15 2025 20:20:40 GMT+0100 (Central European Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Mar 17 2025 22:47:13 GMT+0100 (Central European Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

@@ -196,7 +196,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="console.js.html">console.js</a>, <a href="console.js.html#line65">line 65</a>
+        <a href="console.js.html">console.js</a>, <a href="console.js.html#line69">line 69</a>
     </li></ul></dd>
     
 
@@ -232,7 +232,7 @@
     
 
     
-    <h4 class="name" id="~closeApp"><span class="type-signature">(inner) </span>closeApp<span class="signature">(targetElement)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="~closeApp"><span class="type-signature">(inner) </span>closeApp<span class="signature">()</span><span class="type-signature"></span></h4>
     
 
     
@@ -251,55 +251,6 @@ After calling closeApp all input is processed by the console until a new app is 
 
 
 
-
-
-    <h5>Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>targetElement</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">DOM-Element</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>the DOM-Element the app uses for rendering itself.</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
 
 
 
@@ -335,7 +286,7 @@ After calling closeApp all input is processed by the console until a new app is 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="console.js.html">console.js</a>, <a href="console.js.html#line155">line 155</a>
+        <a href="console.js.html">console.js</a>, <a href="console.js.html#line161">line 161</a>
     </li></ul></dd>
     
 
@@ -655,7 +606,7 @@ Focusses the prompt after entering the command.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="console.js.html">console.js</a>, <a href="console.js.html#line173">line 173</a>
+        <a href="console.js.html">console.js</a>, <a href="console.js.html#line179">line 179</a>
     </li></ul></dd>
     
 
@@ -743,7 +694,7 @@ Focusses the prompt after entering the command.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="console.js.html">console.js</a>, <a href="console.js.html#line58">line 58</a>
+        <a href="console.js.html">console.js</a>, <a href="console.js.html#line62">line 62</a>
     </li></ul></dd>
     
 
@@ -984,7 +935,7 @@ Focusses the prompt after entering the command.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="console.js.html">console.js</a>, <a href="console.js.html#line103">line 103</a>
+        <a href="console.js.html">console.js</a>, <a href="console.js.html#line107">line 107</a>
     </li></ul></dd>
     
 
@@ -1072,7 +1023,7 @@ Focusses the prompt after entering the command.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="console.js.html">console.js</a>, <a href="console.js.html#line86">line 86</a>
+        <a href="console.js.html">console.js</a>, <a href="console.js.html#line90">line 90</a>
     </li></ul></dd>
     
 
@@ -1108,7 +1059,7 @@ Focusses the prompt after entering the command.</p>
     
 
     
-    <h4 class="name" id="~runApp"><span class="type-signature">(inner) </span>runApp<span class="signature">(startApp, params)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="~runApp"><span class="type-signature">(inner) </span>runApp<span class="signature">(params)</span><span class="type-signature"></span></h4>
     
 
     
@@ -1116,7 +1067,8 @@ Focusses the prompt after entering the command.</p>
 
 
 <div class="description">
-    <p>Starts a new app in the console. Hides the log and command prompt. All input after calling this method will be passed to the app until closeApp() is called.</p>
+    <p>Starts a new app in the console. Hides the log and command prompt (and everything else with the css class 'webConsole-hideWhileAppIsRunning').
+No key strokes after calling this method will be handled by the console until closeApp() is called.</p>
 </div>
 
 
@@ -1152,7 +1104,30 @@ Focusses the prompt after entering the command.</p>
 
         <tr>
             
-                <td class="name"><code>startApp</code></td>
+                <td class="name"><code>params</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>param.startFunction</code></td>
             
 
             <td class="type">
@@ -1168,7 +1143,7 @@ Focusses the prompt after entering the command.</p>
 
             
 
-            <td class="description last"><p>the apps start function. startApp is called with these parameters:</p>
+            <td class="description last"><p>the apps start function. the start Function is called with these parameters:</p>
 <ol>
 <li>DOM-Element to render the app to</li>
 <li>closeApp callback function</li>
@@ -1180,7 +1155,7 @@ Focusses the prompt after entering the command.</p>
 
         <tr>
             
-                <td class="name"><code>params</code></td>
+                <td class="name"><code>params.params</code></td>
             
 
             <td class="type">
@@ -1196,7 +1171,7 @@ Focusses the prompt after entering the command.</p>
 
             
 
-            <td class="description last"><p>parameter string passed to the app</p></td>
+            <td class="description last"><p>parameterstring that is passed to the startFunction</p></td>
         </tr>
 
     
@@ -1237,7 +1212,7 @@ Focusses the prompt after entering the command.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="console.js.html">console.js</a>, <a href="console.js.html#line137">line 137</a>
+        <a href="console.js.html">console.js</a>, <a href="console.js.html#line143">line 143</a>
     </li></ul></dd>
     
 
@@ -1357,7 +1332,7 @@ Focuses the prompt input.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="console.js.html">console.js</a>, <a href="console.js.html#line75">line 75</a>
+        <a href="console.js.html">console.js</a>, <a href="console.js.html#line79">line 79</a>
     </li></ul></dd>
     
 
@@ -1409,7 +1384,7 @@ Focuses the prompt input.</p>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sat Mar 15 2025 20:20:40 GMT+0100 (Central European Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Mon Mar 17 2025 22:47:13 GMT+0100 (Central European Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>

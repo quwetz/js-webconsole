@@ -12,7 +12,7 @@ registerApp({name: 'snake', startApp: newGame, info: 'TODO: insert info about sn
 function newGame(targetElement, close_cb, params){
     
     const prevFontSize = window.getComputedStyle(document.documentElement).getPropertyValue('--font-size');
-    document.documentElement.style.setProperty('--font-size', 'clamp(3px, 2.6vw, 20px)');
+    targetElement.style.setProperty('--font-size', 'clamp(3px, 2.6vw, 20px)');
     
 	var touch = gestures.init(window);
     touch.subscribe('strokeRight', () => (inputQueue.push('ArrowRight')));
@@ -20,12 +20,13 @@ function newGame(targetElement, close_cb, params){
     touch.subscribe('strokeLeft', () => (inputQueue.push('ArrowLeft')));
     touch.subscribe('strokeUp', () => (inputQueue.push('ArrowUp')));    
     
+    document.addEventListener('keydown', keyPressed);
     
 	var displayElement = targetElement;
 	displayElement.classList.add('posRelative');
 	displayElement.classList.add('webConsole-snake');
 
-	var closeFunction = close_cb;
+	var cleanup_cb = close_cb;
 	
 	var width = 32;
 	var height = 32;
@@ -96,9 +97,7 @@ function newGame(targetElement, close_cb, params){
     field = initField();
     init();    
     	
-	return {
-		keyPressed,
-	};
+	return;
 	
 	function init(){
 		initValues(); 
@@ -180,10 +179,9 @@ function newGame(targetElement, close_cb, params){
 	}
 	
 	function quit(){
-		console.log('quit called');
 		enableScrolling();
         document.documentElement.style.setProperty('--font-size', prevFontSize);
-		closeFunction(targetElement);
+		cleanup_cb();
 	}
 	
 	function disableScrolling(){
