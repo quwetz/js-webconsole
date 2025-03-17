@@ -63,7 +63,7 @@ const commands = {
 	},
 	setfontsize: {
 		execute: setFontSize,
-		description: 'Sets the consoles font size.',
+		description: 'Sets the console\'s font size.',
 		info: ui.htmlFromString({text: 'Usage: <i>setfontsize (css-fontsize)</i><br>Example: <i>setfontsize 14px</i>'}),
 		noAdditionalParameters: false,
 		structure: [{label: 'size', items: 'size', mandatory: true}],

@@ -12,11 +12,11 @@ import {IllegalArgumentsError, ValueError} from '../errors.js';
 
 registerCommand('img', {
 		execute: loadImage,
-		description: 'Loads a local image and converts it to a utf8 text image.',
+		description: 'Loads a local image and converts it to an utf8 text image.',
 		info: ui.htmlFromString({text: 'Everything is done locally - no info is sent anywhere'+
 		    '<br>Usage: <i>img [options]</i><br>options:'+
 		    '<br>  -w (number) width in characters (default=128)'+
-		    '<br>  -h (number) height in characters (default is derived from width and the images aspect ratio)'+
+		    '<br>  -h (number) height in characters (default is derived from width and the image\'s aspect ratio)'+
 		    '<br>  -d (number) display width of the image 1..100 (default=25)'+
 		    '<br>  -c (number | <i>auto</i> | <i>original</i>) contrast adjustment value (default=original)'+
 		    '<br>      number - a decimal number > 0'+
