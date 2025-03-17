@@ -30,6 +30,8 @@ document.addEventListener('click', focusPromptInput);
  * @returns the DOM Element (div) containting the console.
  */
 function init(){
+    window.onbeforeunload = function() { return "Leave the current session? [y/N]"; };    
+    
 	consoleContainer = document.createElement('div');
 	consoleContainer.id = 'webConsole';
 	consoleContainer.classList.add('webConsole');

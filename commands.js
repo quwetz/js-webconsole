@@ -68,6 +68,13 @@ const commands = {
 		noAdditionalParameters: false,
 		structure: [{label: 'size', items: 'size', mandatory: true}],
 	},
+	rss: {
+	    execute: function (){log(ui.htmlFromString({text: '<a href="rss.xml" target="_blank">rss.xml</a>'}));},
+	    description: 'A link to this site\'s rss feed',
+	    info: '',
+	    noAdditionalParameters: true,
+	    structure: [],
+	},
 };
 
 
