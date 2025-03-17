@@ -19,7 +19,6 @@ var autoCompleteHelp;
 var optionsIndex = 0;
 
 document.addEventListener('keydown', keyPressed);
-document.addEventListener('click', focusPromptInput);
 
 ///////////////////////////////////////////////////////////////////////////////
 ////// Public Methods
