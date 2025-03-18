@@ -139,7 +139,7 @@ function newGame(targetElement, close_cb, params){
 		
 		let gameAreaContainer = document.createElement('div');
 		gameAreaContainer.classList.add('webConsole-scaleToSquare');
-		gameAreaContainer.style.height = height + 'ch';
+		gameAreaContainer.style.height = height * 0.6 + 'em';
 		displayElement.appendChild(gameAreaContainer);
 		
 		for(let y = 0; y < height; y++){

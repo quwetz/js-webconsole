@@ -90,6 +90,7 @@ const commands = {
  *
  */
 export function nextParameter(currentInput){
+    currentInput = currentInput.toLowerCase();
 	var commandChain = currentInput.trim().split(' ').filter((s) => (s != ''));
 	if (commandChain.length == 0) return undefined;
 	let currentToken = commandChain.shift();
@@ -126,6 +127,7 @@ export function registerCommand(command, commandData){
     if (!util.isAlphaNumeric(command)) {
         throw new Error(command + ' contains illegal characters');
     }
+    command = command.toLowerCase();
     commands[command] = commandData;
     updateHelpStructure();
 }
@@ -145,6 +147,7 @@ export function registerApp({name, startApp, info}){
     if (!util.isAlphaNumeric(name)) {
         throw new Error(name + ' contains illegal characters');
     }
+    name = name.toLowerCase();
     apps[name] = {startApp: startApp, info: info};
     updateRunStructure();
 }
@@ -155,6 +158,7 @@ export function registerApp({name, startApp, info}){
  */
 export function executeCommand(commandString){
     var [command, rest] = util.splitAtFirstSpace(commandString);
+    command = command.toLowerCase();
 	if(Object.keys(commands).includes(command)){
 		commands[command].execute(rest);
 	} else {
@@ -201,6 +205,7 @@ function help(params){
 		log(ui.htmlFromString({text: 'For detailed information use <i>help [command]</i>'}));
 		return;
 	}
+	params = params.toLowerCase();
 	if(Object.keys(commands).includes(params)){
 		log(`Description: ${ commands[params].description}`);
 		log(commands[params].info);
@@ -267,6 +272,7 @@ function listApps(){
 
 function handleColorChange(params){
 	var [colorIdentifier, color] = util.splitAtFirstSpace(params);
+	colorIdentifier = colorIdentifier.toLowerCase();
 	if(colorIdentifiers.includes(colorIdentifier)){
 		let cssVariable = `--${ colorIdentifier}-color`;
 		if(changeColor(cssVariable, color)) {
