@@ -249,6 +249,7 @@ function startApp(params){
 		return;
 	}
 	var [app, appParams] = util.splitAtFirstSpace(params);
+	app = app.toLowerCase();
 	if(Object.keys(apps).includes(app)){
 		runApp({startFunction: apps[app].startApp, params: appParams});
 		return;
