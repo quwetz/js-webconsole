@@ -28,9 +28,7 @@ document.addEventListener('keydown', keyPressed);
  * Initializes the console. Sets up all necessary DOM Elements. Should only be called once.
  * @returns the DOM Element (div) containting the console.
  */
-function init(){
-    window.onbeforeunload = function() { return "Leave the current session? [y/N]"; };    
-    
+function init(){    
 	consoleContainer = document.createElement('div');
 	consoleContainer.id = 'webConsole';
 	consoleContainer.classList.add('webConsole');
@@ -106,31 +104,26 @@ function processPromptInput(){
  * @param msg {string | DOM-Element | Array<string|DOM-Element>} - If string: a div-Element is logged with msg as innerText. If (parsed) html code should be logged, create the element beforehand and pass it to this method.
  */
 function log(msg){
+	var logElem;
 	if(typeof(msg) == 'string'){
-		let logLine = document.createElement('div');
-		logLine.innerText = msg;
-		logContainer.appendChild(logLine);
-		promptInput.scrollIntoView();
-		return;
-	}
-	if(msg instanceof HTMLElement){
-		logContainer.appendChild(msg);
-		promptInput.scrollIntoView();
-        return;
-	}
-	if(Array.isArray(msg)){
-		let logLine = document.createElement('div');
+		logElem = document.createElement('div');
+		logElem.innerText = msg;
+		logContainer.appendChild(logElem);
+	} else if(msg instanceof HTMLElement){
+		logElem = logContainer.appendChild(msg);
+	} else if(Array.isArray(msg)){
+		logElem = document.createElement('div');
 		for(let e of msg){
 			if (e instanceof HTMLElement){
-				logContainer.appendChild(e);
+				logElem.appendChild(e);
 			} else {
-				logContainer.appendChild(document.createTextNode(e));
+				logElem.appendChild(document.createTextNode(e));
 			}
 		}
-		logContainer.appendChild(logLine);
-		promptInput.scrollIntoView();
-		return;
+		logContainer.appendChild(logElem);
 	}
+	logElem.classList.add('webConsole-logElement');
+    logElem.scrollIntoView({behavior: 'smooth'});
 }
 
 /**

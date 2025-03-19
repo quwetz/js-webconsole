@@ -7,12 +7,12 @@ import * as ui from '../ui-elements.js';
 import * as gestures from '../gestures.js';
 import {registerApp} from '../commands.js';
 
-registerApp({name: 'snake', startApp: newGame, info: 'TODO: insert info about snake'});
+registerApp({name: 'snake', startApp: newGame, info: 'Play Snake!'});
 
 function newGame(targetElement, close_cb, params){
     
     const prevFontSize = window.getComputedStyle(document.documentElement).getPropertyValue('--font-size');
-    targetElement.style.setProperty('--font-size', 'clamp(3px, 2.6vw, 20px)');
+    document.documentElement.style.setProperty('--font-size', 'clamp(3px, 4.5vw, 20px)');
     
 	var touch = gestures.init(window);
     touch.subscribe('strokeRight', () => (inputQueue.push('ArrowRight')));
