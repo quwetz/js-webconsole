@@ -110,11 +110,13 @@ function log(msg){
 		let logLine = document.createElement('div');
 		logLine.innerText = msg;
 		logContainer.appendChild(logLine);
+		promptInput.scrollIntoView();
 		return;
 	}
 	if(msg instanceof HTMLElement){
 		logContainer.appendChild(msg);
-		return;
+		promptInput.scrollIntoView();
+        return;
 	}
 	if(Array.isArray(msg)){
 		let logLine = document.createElement('div');
@@ -126,6 +128,7 @@ function log(msg){
 			}
 		}
 		logContainer.appendChild(logLine);
+		promptInput.scrollIntoView();
 		return;
 	}
 }
@@ -166,6 +169,7 @@ function closeApp(){
 	for (let i = 0; i < elems.length; i++) {
 	     ui.show(elems[i]);
 	}
+	promptInput.scrollIntoView();
 }
 
 /**

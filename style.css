@@ -123,6 +123,7 @@ a {
 	white-space: pre;
 	text-wrap: wrap;
 	transition: font-size 0.5s ease;
+	scroll-behavior: smooth;
 }
 
 .webConsole-snake {
@@ -217,8 +218,12 @@ select.webConsole-autoCompleteHelp, .webConsole-autoCompleteHelp {
 }
 
 .webConsole-header {
+	position: -webkit-sticky;
+    position: -moz-sticky;
+    position: -ms-sticky;
+    position: -o-sticky;
+    position: sticky;
 	z-index: 1;
-	position: sticky;
 	top: 0em;
 	padding-top: 0.2em;
 	height: 1.5em;
