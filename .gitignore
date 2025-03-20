@@ -1,7 +1,7 @@
 data/
 .jsdoc
 .genDoc.sh
-index.html
+my-index.html
 main.js
 TODOs.txt
 rss.xml
