@@ -6,7 +6,7 @@ Good Question...
 
 While learning javascript I was looking for a project to work on and this seemed like a fun idea. I also liked the challenge of building it in a way that users without experience with clis are able to navigate it.
 
-[Try it here!](/EXAMPLE.html)
+[Try it here!](/js-webconsole/EXAMPLE.html)
 
 ## How it works
 
