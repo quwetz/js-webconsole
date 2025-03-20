@@ -137,6 +137,14 @@ export function registerCommand(command, commandData){
  * @param {Object} appData
  * @param {string} appData.name - the apps name (must contain only alphanumerical characters)
  * @param {function} appData.startApp - the function to call to start the app
+ * The startApp function will be called with three parameters:
+ *   1. DOM-Element to render the app to
+ *   2. closeApp callback function
+ *   3. params 
+ *
+ * **Important:** 
+ *   1. Make sure your app provides a way to close it. Ideally also usable on mobile devices.
+ *   2. Your app needs to call the closeApp call back when closed, so the console prompt input and log are displayed again.
  * @param {string} appData.info -info, ideally including ***usage*** and ***examples***
  * @throws {Error} if name is not a string or contains any illegal characters
  */

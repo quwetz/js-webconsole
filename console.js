@@ -100,7 +100,7 @@ function processPromptInput(){
 }
 
 /**
- * Prints msg to the console
+ * Prints msg to the js-webconsole log. Then scrolls to the logged Element.
  * @param msg {string | DOM-Element | Array<string|DOM-Element>} - If string: a div-Element is logged with msg as innerText. If (parsed) html code should be logged, create the element beforehand and pass it to this method.
  */
 function log(msg){
