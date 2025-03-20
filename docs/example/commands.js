@@ -1,32 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>JSDoc: Source: commands.js</title>
-
-    <script src="scripts/prettify/prettify.js"> </script>
-    <script src="scripts/prettify/lang-css.js"> </script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
-    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
-</head>
-
-<body>
-
-<div id="main">
-
-    <h1 class="page-title">Source: commands.js</h1>
-
-    
-
-
-
-    
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>/**
+/**
  * @module commands
  * @description The commands moldule of js-webconsole. Here are all available commands defined or registered.
  */
@@ -57,47 +29,47 @@ const commands = {
 	home: {
 		execute: home, 
 		description: 'Displays landing page content.', 
-		info: ui.htmlFromString({text: 'Usage: &lt;i>home&lt;/i>'}),
+		info: ui.htmlFromString({text: 'Usage: <i>home</i>'}),
 		noAdditionalParameters: true,
 		structure: [],
 	},
 	help: {
 		execute: help, 
 		description: 'Provides Information about commands.', 
-		info: ui.htmlFromString({text: 'Usage: &lt;i>help [command]&lt;/i>&lt;br>Examples: &lt;i>help setcolor&lt;/i>'}),
+		info: ui.htmlFromString({text: 'Usage: <i>help [command]</i><br>Examples: <i>help setcolor</i>'}),
 		noAdditionalParameters: false,
 		structure: [{label: 'command', items: undefined, mandatory: false}],
 		},
 	setcolor: {
 		execute: handleColorChange,
 		description: 'Changes the specified color.',
-		info: ui.htmlFromString({text: 'Usage: &lt;i>setcolor (identifier) (css-colorvalue)&lt;/i>&lt;br>Examples: &lt;i>setcolor background white&lt;/i>, &lt;i>setcolor foreground #F112FA&lt;/i>, &lt;i>setcolor alert rgb(0,255,255)&lt;/i>&lt;br>Valid identifiers: ' + colorIdentifiers.join(', ')}),
+		info: ui.htmlFromString({text: 'Usage: <i>setcolor (identifier) (css-colorvalue)</i><br>Examples: <i>setcolor background white</i>, <i>setcolor foreground #F112FA</i>, <i>setcolor alert rgb(0,255,255)</i><br>Valid identifiers: ' + colorIdentifiers.join(', ')}),
 		noAdditionalParameters: false,
 		structure: [{label: 'identifier', items: colorIdentifiers, mandatory: true}, {label: 'color', items: 'color', mandatory: true}],
 	},
 	run: {
 		execute: startApp,
 		description: 'Runs an App in the console.',
-		info: ui.htmlFromString({text: 'Usage: &lt;i>run (app_name) [parameters]...&lt;/i>&lt;br>Example: &lt;i>run snake&lt;/i>&lt;br>Use &lt;i>listapps&lt;/i> to list available apps'}),
+		info: ui.htmlFromString({text: 'Usage: <i>run (app_name) [parameters]...</i><br>Example: <i>run snake</i><br>Use <i>listapps</i> to list available apps'}),
 		noAdditionalParameters: false,
 		structure: [{label: 'app', items: undefined, mandatory: true}],
 	},
 	listapps: {
 		execute: listApps,
 		description: 'Lists all available apps.',
-		info: ui.htmlFromString({text: 'Usage: &lt;i>listapps&lt;/i>'}),
+		info: ui.htmlFromString({text: 'Usage: <i>listapps</i>'}),
 		noAdditionalParameters: true,
 		structure: [],
 	},
 	setfontsize: {
 		execute: setFontSize,
 		description: 'Sets the console\'s font size.',
-		info: ui.htmlFromString({text: 'Usage: &lt;i>setfontsize (css-fontsize)&lt;/i>&lt;br>Example: &lt;i>setfontsize 14px&lt;/i>'}),
+		info: ui.htmlFromString({text: 'Usage: <i>setfontsize (css-fontsize)</i><br>Example: <i>setfontsize 14px</i>'}),
 		noAdditionalParameters: false,
 		structure: [{label: 'size', items: 'size', mandatory: true}],
 	},
 	rss: {
-	    execute: function (){log(ui.htmlFromString({text: '&lt;a href="rss.xml" target="_blank">rss.xml&lt;/a>'}));},
+	    execute: function (){log(ui.htmlFromString({text: '<a href="rss.xml" target="_blank">rss.xml</a>'}));},
 	    description: 'A link to this site\'s rss feed',
 	    info: '',
 	    noAdditionalParameters: true,
@@ -125,10 +97,10 @@ export function nextParameter(currentInput){
 	if (!commands.hasOwnProperty(currentToken)) return undefined;
 	
 	let structure = commands[currentToken].structure;
-	if (structure.length &lt; commandChain.length) return undefined;
+	if (structure.length < commandChain.length) return undefined;
 	
 	let i = 0;
-	for (; i &lt; commandChain.length; i++) {
+	for (; i < commandChain.length; i++) {
 		let items = structure[i].items;
 		if (Array.isArray(items)){
 			if (!items.includes(commandChain[i])) return undefined;
@@ -145,7 +117,7 @@ export function nextParameter(currentInput){
  * @param {string} commandData.description - short description of the command
  * @param {string} commandData.info - more in-depth description, ideally including ***usage*** and ***examples***
  * @param {boolean} commandData.noAdditionalParameters - Flag specifying if their are no additional parameters or options
- * @param {Array&lt;ParameterItem>} commandData.structure - the structure of the command 
+ * @param {Array<ParameterItem>} commandData.structure - the structure of the command 
  * @throws {Error} if command is not a string or contains any illegal characters
  */
 export function registerCommand(command, commandData){
@@ -203,14 +175,14 @@ export function executeCommand(commandString){
 }
 
 /**
- * @returns {Array&lt;string>} an Array containing the names of all registered Apps.
+ * @returns {Array<string>} an Array containing the names of all registered Apps.
  */
 export function getAppNames(){
     return Object.keys(apps);
 }
 
 /**
- * @returns {Array&lt;string>} an Array containing the names of all registered Commands.
+ * @returns {Array<string>} an Array containing the names of all registered Commands.
  */
 export function getCommandNames(){
     return Object.keys(commands);
@@ -238,7 +210,7 @@ function help(params){
 		Object.keys(commands).forEach((e) => log([cmdBtn({commandString: e, autoSubmit: commands[e].noAdditionalParameters}), ` - ${ commands[e].description}`]));
 		log('');
 		
-		log(ui.htmlFromString({text: 'For detailed information use &lt;i>help [command]&lt;/i>'}));
+		log(ui.htmlFromString({text: 'For detailed information use <i>help [command]</i>'}));
 		return;
 	}
 	params = params.toLowerCase();
@@ -255,12 +227,12 @@ function home(){
 	log('This website uses a command line interface.');
 	log('To browse this site, enter a command or click a button.');
 	log(['Enter or click ', cmdBtn({commandString: 'help', autoSubmit: true}), ' for a list of available commands']);
-	log(['The code used for this UI is open source and available at ', ui.htmlFromString({text: '&lt;a href="https://github.com/quwetz/js-webconsole">github.com/quwetz/js-webconsole&lt;/a>', container: 'span'})]);
+	log(['The code used for this UI is open source and available at ', ui.htmlFromString({text: '<a href="https://github.com/quwetz/js-webconsole">github.com/quwetz/js-webconsole</a>', container: 'span'})]);
 }
 
 function setFontSize(params){
 	let num = parseInt(params);
-	if(num &lt;= 0){
+	if(num <= 0){
 		log('The font size has to be bigger than 0');
 		return;
 	}
@@ -346,26 +318,3 @@ function logColorConversionError(){
 	log('Examples: black, rgb(0,0,0) or #000000');
 }
 
-</code></pre>
-        </article>
-    </section>
-
-
-
-
-</div>
-
-<nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-commands.html">commands</a></li><li><a href="module-console.html">console</a></li><li><a href="module-gestures.html">gestures</a></li><li><a href="module-img.html">img</a></li><li><a href="module-snake.html">snake</a></li><li><a href="module-ui-elements.html">ui-elements</a></li><li><a href="module-util.html">util</a></li></ul><h3>Classes</h3><ul><li><a href="ImageProcessor.html">ImageProcessor</a></li></ul>
-</nav>
-
-<br class="clear">
-
-<footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Thu Mar 20 2025 10:38:21 GMT+0100 (Central European Standard Time)
-</footer>
-
-<script> prettyPrint(); </script>
-<script src="scripts/linenumber.js"> </script>
-</body>
-</html>

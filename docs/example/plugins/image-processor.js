@@ -1,32 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>JSDoc: Source: plugins/image-processor.js</title>
-
-    <script src="scripts/prettify/prettify.js"> </script>
-    <script src="scripts/prettify/lang-css.js"> </script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
-    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
-</head>
-
-<body>
-
-<div id="main">
-
-    <h1 class="page-title">Source: plugins/image-processor.js</h1>
-
-    
-
-
-
-    
-    <section>
-        <article>
-            <pre class="prettyprint source linenums"><code>'use-strict';
+'use-strict';
 
 import * as util from '../util.js';
 import {ValueError} from '../errors.js';
@@ -92,7 +64,7 @@ class ImageProcessor {
 	
 	generateMonochrome(){
 		this.monochrome = new ImageData(this.original.width, this.original.height);
-		for (let i = 0; i &lt; this.original.data.length; i += 4){
+		for (let i = 0; i < this.original.data.length; i += 4){
 			let value = 
 				(0.2126 * this.original.data[i]) +
 				(0.7152 * this.original.data[i + 1]) +
@@ -108,11 +80,11 @@ class ImageProcessor {
 		if(this.monochrome == undefined){
 			this.generateMonochrome();
 		}
-		for(let y = 0; y &lt; this.canvas.height; y++) {
-			for(let x = 0; x &lt; this.canvas.width * 4; x += 4){
+		for(let y = 0; y < this.canvas.height; y++) {
+			for(let x = 0; x < this.canvas.width * 4; x += 4){
 				this.monochromeString += this.brightnessValueToBlockSymbol(this.monochrome.data[this.monochrome.width * y * 4 + x]);
 			}
-			this.monochromeString += '&lt;br>';
+			this.monochromeString += '<br>';
 		}
 	}
 	
@@ -129,7 +101,7 @@ class ImageProcessor {
 			this.generateMonochrome();
 		}
 		this.binary = new ImageData(this.monochrome.width, this.monochrome.height);
-		for (let i = 0; i &lt; this.monochrome.data.length; i += 4){
+		for (let i = 0; i < this.monochrome.data.length; i += 4){
 			let value = this.monochrome.data[i] > this.binaryThreshold ? 255 : 0;
 			this.binary.data[i] = this.binary.data[i + 1] = this.binary.data[i + 2] =  value;
 			this.binary.data[i + 3] = 255;
@@ -140,11 +112,11 @@ class ImageProcessor {
 		if(this.binary == undefined){
 			this.generateBinary();	
 		}
-		for(let y = 0; y &lt; this.canvas.height; y++) {
-			for(let x = 0; x &lt; this.canvas.width * 4; x += 4){
+		for(let y = 0; y < this.canvas.height; y++) {
+			for(let x = 0; x < this.canvas.width * 4; x += 4){
 				this.binaryString += this.binary.data[this.binary.width * y * 4 + x] > 0 ? '█' : ' ';
 			}
-			this.binaryString += '&lt;br>';
+			this.binaryString += '<br>';
 		}
 	}
 	
@@ -193,7 +165,7 @@ class ImageProcessor {
 	        this.generateMonochrome();
 	    }
 	    var hist = Array(256).fill(0);
-	    for (let i = 0; i &lt; this.monochrome.data.length; i += 4) {
+	    for (let i = 0; i < this.monochrome.data.length; i += 4) {
 	        hist[this.monochrome.data[i]]++;
 	    }
 	    return hist;
@@ -219,7 +191,7 @@ class ImageProcessor {
 	    }
         const c = util.clamp(Number(contrast), 0, 255);
         const b = Number(brightness);
-        for (let i = 0; i &lt; this.monochrome.data.length; i += 4) {
+        for (let i = 0; i < this.monochrome.data.length; i += 4) {
 	        let v = (this.monochrome.data[i] * c) + b;
 	        v = Math.round(v);
 	        v = util.clamp(v, 0, 255);
@@ -236,7 +208,7 @@ class ImageProcessor {
 	    var min, max;
 	    var hist = this.monochromeHistogramm();
 	    var th = (this.monochrome.data.length / 4 ) * 0.05; // threshold = 5% of total number ofpixels
-	    for (let i = 0; i &lt; hist.length; i++) {
+	    for (let i = 0; i < hist.length; i++) {
 	        if (hist[i] > th) {
 	            min = i;
 	            break;
@@ -251,7 +223,7 @@ class ImageProcessor {
 	    if (min == undefined) return;
 	    let alpha = 255 / (max - min);
 	    let beta = min;
-	    for (let i = 0; i &lt; this.monochrome.data.length; i += 4) {
+	    for (let i = 0; i < this.monochrome.data.length; i += 4) {
 	        let v = Math.floor((this.monochrome.data[i] - beta) * alpha);
 	        this.monochrome.data[i] = v;
 	        this.monochrome.data[i + 1] = v;
@@ -259,26 +231,3 @@ class ImageProcessor {
 	    }
 	}
 }
-</code></pre>
-        </article>
-    </section>
-
-
-
-
-</div>
-
-<nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-commands.html">commands</a></li><li><a href="module-console.html">console</a></li><li><a href="module-gestures.html">gestures</a></li><li><a href="module-img.html">img</a></li><li><a href="module-snake.html">snake</a></li><li><a href="module-ui-elements.html">ui-elements</a></li><li><a href="module-util.html">util</a></li></ul><h3>Classes</h3><ul><li><a href="ImageProcessor.html">ImageProcessor</a></li></ul>
-</nav>
-
-<br class="clear">
-
-<footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Thu Mar 20 2025 10:38:21 GMT+0100 (Central European Standard Time)
-</footer>
-
-<script> prettyPrint(); </script>
-<script src="scripts/linenumber.js"> </script>
-</body>
-</html>
