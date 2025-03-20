@@ -223,11 +223,8 @@ function help(params){
 }
 
 function home(){
-	log('Hello and welcome!');
-	log('This website uses a command line interface.');
 	log('To browse this site, enter a command or click a button.');
 	log(['Enter or click ', cmdBtn({commandString: 'help', autoSubmit: true}), ' for a list of available commands']);
-	log(['The code used for this UI is open source and available at ', ui.htmlFromString({text: '<a href="https://github.com/quwetz/js-webconsole">github.com/quwetz/js-webconsole</a>', container: 'span'})]);
 }
 
 function setFontSize(params){

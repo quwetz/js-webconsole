@@ -1,4 +1,4 @@
-js-WebConsole is a front end framework for building command line based user interfaces for website.
+js-WebConsole is a front end framework for building command line based user interfaces for websites.
 
 *Why would anybody want a cli for a website?!* 
 
