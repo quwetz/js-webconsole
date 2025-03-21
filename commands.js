@@ -169,6 +169,8 @@ export function executeCommand(commandString){
     command = command.toLowerCase();
 	if(Object.keys(commands).includes(command)){
 		commands[command].execute(rest);
+	} else if (Object.keys(apps).includes(command)) {
+	    startApp(command + ' ' + rest);
 	} else {
 		log('Unknown command: ' + command);
 	}	
@@ -248,13 +250,16 @@ function setFontSize(params){
 }
 
 function startApp(params){
-	if(params == undefined){
+    params = params.trim();
+	if(params == ''){
 		log('Missing parameter. Which App should be run?')
 		listApps();
 		return;
 	}
 	var [app, appParams] = util.splitAtFirstSpace(params);
 	app = app.toLowerCase();
+	app = app.trim();
+	appParams = appParams.trim();
 	if(Object.keys(apps).includes(app)){
 		runApp({startFunction: apps[app].startApp, params: appParams});
 		return;
