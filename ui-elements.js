@@ -213,11 +213,12 @@ export function show(uiElement) {
  * @param {object} param
  * @param {string} param.text - the html code string
  * @param {string} [param.container=div] - the html element type
+ * @param {string} param.classList - a classList to for the element
  * @returns {DOM-Element} the DOM Element
  */
 export function htmlFromString({text: s, container = 'div', classList}){
 	var e = document.createElement(container);
-	if (classList != undefined) {
+	if (classList != undefined && classList != '') {
 	    e.classList.add(classList);
 	}
 	e.innerHTML = s;

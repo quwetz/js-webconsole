@@ -1,7 +1,10 @@
+visitor-log
+php.ini
+php/
 data/
 .jsdoc
 .genDoc.sh
-my-index.html
+index.php
 main.js
 TODOs.txt
 rss.xml

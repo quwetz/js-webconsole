@@ -48,6 +48,10 @@ a {
     color: var(--link-color);
 }
 
+pre {
+    font-family: inherit;
+}
+
 .webConsole-pre {
     font-family: inherit;
     display: inline;
