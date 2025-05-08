@@ -10,7 +10,7 @@ While learning javascript I was looking for a project to work on and this seemed
 
 ## How it works
 
-js-WebConsole is designed to be used as a single-page application. The users interact with it by either writing commands to the console or pressing buttons that write the commands for them. The framework provides some basic commands for help, setting colors/fontsize, run a console app, process an image to ascii...
+js-WebConsole is designed to be used as a single-page application. The users interact with it by either writing commands to the console or by pressing buttons which write the commands for them. The framework provides some basic commands for help, setting colors/fontsize, run a console app, process an image to ascii, ...
 
 More commands can easily be integrated by writing them in their own .js file, calling the public method *registerCommand()* from the commands module and importing your file in your main script. See @ */EXAMPLE-main.js* */plugins/img.js* .
 
